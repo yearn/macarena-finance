@@ -64,7 +64,7 @@ export const WalletContextApp = ({children, vaults}: {children: ReactElement, va
 		for (const vault of vaults) {
 			const	vaultContract = new Contract(vault.address, VAULT_V2_ABI);
 			const	underlyingTokenContract = new Contract(vault.token.address, ERC20_ABI);
-			const	lensPriceContract = new Contract(networks[chainID].lensAddress, LENS_ABI);
+			const	lensPriceContract = new Contract(networks[chainID || 1].lensAddress, LENS_ABI);
 
 			calls.push(...[
 				vaultContract.balanceOf(userAddress),
@@ -134,7 +134,7 @@ export const WalletContextApp = ({children, vaults}: {children: ReactElement, va
 		const	calls = [];
 		const	vaultContract = new Contract(vault.address, VAULT_V2_ABI);
 		const	underlyingTokenContract = new Contract(vault.token.address, ERC20_ABI);
-		const	lensPriceContract = new Contract(networks[chainID].lensAddress, LENS_ABI);
+		const	lensPriceContract = new Contract(networks[chainID || 1].lensAddress, LENS_ABI);
 
 		calls.push(...[
 			vaultContract.balanceOf(userAddress),

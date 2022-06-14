@@ -19,7 +19,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 
 	const getYearnVaults = React.useCallback(async (): Promise<void> => {
 		NProgress.start();
-		const	networkData = networks[chainID];
+		const	networkData = networks[chainID || 1];
 		const	[api, meta, tok, vs] = await Promise.allSettled([
 			axios.get(`${networkData.apiURI}/vaults/all`),
 			axios.get(`${networkData.metaURI}/strategies/all`),
@@ -91,7 +91,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 			** to endorse. If the vault's address match one of them, include it
 			** in the final list.
 			******************************************************************/
-			if (endorsedVaults[chainID].includes(toAddress(vault.address))) {
+			if (endorsedVaults[chainID || 1].includes(toAddress(vault.address))) {
 				return true;
 			}
 			return false;

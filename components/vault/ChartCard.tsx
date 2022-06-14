@@ -97,7 +97,7 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 					pricePerShare
 				}
 			}
-		}` : null, (query: string): any => request(networks[chainID].graphURI, query)
+		}` : null, (query: string): any => request(networks[chainID || 1].graphURI, query)
 	);
 
 	/* 🔵 - Yearn Finance **************************************************
