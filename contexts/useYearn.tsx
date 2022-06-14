@@ -137,7 +137,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 			** The API may have empty points data for the APY. We don't want
 			** our app to get some undefined issue, so we add a fail-safe here
 			******************************************************************/
-			if (!vault?.apy?.points?.week_ago) {
+			if (!vault?.apy?.points?.inception) {
 				vault.apy.points = {
 					week_ago: 0,
 					month_ago: 0,
