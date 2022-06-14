@@ -169,7 +169,7 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 				maxTime: slicedData[slicedData.length - 1].label.split(',')[0],
 				growth: growth
 			});
-			setTimeout((): void => set_timeoutGrowth({minTime: '', maxTime: '', growth: 0}), 2500);
+			setTimeout((): void => set_timeoutGrowth({minTime: '', maxTime: '', growth: 0}), 5000);
 		}
 	}
 
@@ -216,7 +216,9 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 						</b>
 					</div>
 				</div>
-				<div>{timeoutGrowth && ( timeoutGrowth.growth.toFixed(2) + '% annualised growth from ' + timeoutGrowth.minTime + ' to ' + timeoutGrowth.maxTime)}</div>
+				<div className={'absolute top-16 text-xs text-center opacity-50'}>
+					{timeoutGrowth?.minTime && timeoutGrowth?.maxTime && (timeoutGrowth.growth.toFixed(2) + '% annualised growth from ' + timeoutGrowth.minTime + ' to ' + timeoutGrowth.maxTime)}
+				</div>
 				<Line
 					className={'-mb-0.5'}
 					data={{
