@@ -24,7 +24,8 @@ module.exports = {
 				'inherit': 'inherit'
 			},
 			fontSize: {
-				'4xl': ['32px', '42px']
+				'4xl': ['32px', '42px'],
+				'5xl': ['48px', '64px']
 			}
 		}
 	},

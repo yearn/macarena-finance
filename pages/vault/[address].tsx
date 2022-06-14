@@ -5,12 +5,15 @@ import	{AddressWithActions, Card}			from	'@yearn-finance/web-lib/components';
 import	{parseMarkdown, toAddress}			from	'@yearn-finance/web-lib/utils';
 import	{Chevron}							from	'@yearn-finance/web-lib/icons';
 import	useYearn							from	'contexts/useYearn';
-import	DepositCard							from	'components/DepositCard';
-import	OverviewCard						from	'components/OverviewCard';
-import	ChartCard							from	'components/ChartCard';
+import	DepositCard							from	'components/vault/DepositCard';
+import	OverviewCard						from	'components/vault/OverviewCard';
+import	ChartCard							from	'components/vault/ChartCard';
 import type {TVault}						from	'contexts/useYearn.d';
 
-function	Vault({address, description, icon, name, decimals, chainID}: TVault & {chainID: number}): ReactElement {
+function	Vault({address, tokenAddress, description, icon, name, decimals, chainID}: TVault & {
+	chainID: number,
+	tokenAddress: string
+}): ReactElement {
 	const	{vaults} = useYearn();
 	const	[currentVault, set_currentVault] = React.useState<TVault | undefined>(vaults.find((vault): boolean => toAddress(vault.address) === address));
 
@@ -35,11 +38,11 @@ function	Vault({address, description, icon, name, decimals, chainID}: TVault & {
 					currentVault={{
 						address,
 						name,
-						icon,
 						description,
 						decimals,
 						token: {
-							address: currentVault?.address || ''
+							icon,
+							address: tokenAddress
 						}
 					}} />
 				<ChartCard
@@ -116,10 +119,11 @@ export async function getStaticProps({params}: {params: {address: string}}): Pro
 		console.error(`failed to fetch vaults: ${_token.reason}`);
 		return {props: {
 			address,
-			icon: vault.icon,
+			icon: vault.token.icon,
 			name: vault.display_name || vault.name,
 			decimals: vault.decimals,
 			tokenSymbol: vault.token.symbol,
+			tokenAddress: vault.token.address,
 			description: '',
 			chainID
 		}};
@@ -127,10 +131,11 @@ export async function getStaticProps({params}: {params: {address: string}}): Pro
 
 	return {props: {
 		address,
-		icon: vault.icon,
+		icon: vault.token.icon,
 		name: vault.display_name || vault.name,
 		decimals: vault.decimals,
 		tokenSymbol: vault.token.symbol,
+		tokenAddress: vault.token.address,
 		description: (_token?.value.data?.description || '').replace(/{{token}}/g, vault.token.symbol),
 		chainID
 	}};

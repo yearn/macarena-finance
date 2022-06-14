@@ -9,11 +9,11 @@ import	useWallet													from	'contexts/useWallet';
 type TOverviewCard = {
 	currentVault: {
 		address: string,
-		icon: string,
 		name: string,
 		description: string,
 		decimals: number,
 		token: {
+			icon: string,
 			address: string
 		}
 	}
@@ -58,14 +58,14 @@ function	OverviewCard({currentVault}: TOverviewCard): ReactElement {
 	**************************************************************************/
 	return (
 		<Card className={'col-span-1 md:col-span-3'}>
-			<div className={'flex flex-row items-start space-x-4'}>
+			<div className={'flex flex-row items-start mb-6 space-x-6'}>
 				<Image
-					src={currentVault.icon}
-					width={40}
-					height={40}
-					className={'min-w-[40px]'} />
+					src={currentVault.token.icon}
+					width={80}
+					height={80}
+					className={'min-w-[80px]'} />
 				<div>
-					<h2 className={'-my-1 text-xl font-bold text-typo-primary'}>
+					<h2 className={'-mt-1 -mb-2 text-xl font-bold md:text-5xl text-neutral-700'}>
 						{currentVault.name}
 					</h2>
 					<AddressWithActions
@@ -74,15 +74,16 @@ function	OverviewCard({currentVault}: TOverviewCard): ReactElement {
 				</div>
 
 			</div>
-			<div className={'mt-4 mb-6 space-y-4 md:mb-10'}>
+			<div className={'mb-4 space-y-2'}>
+				<b>{'About'}</b>
 				<p
-					className={'text-typo-secondary'}
+					className={'text-neutral-700/70'}
 					dangerouslySetInnerHTML={{__html: parseMarkdown(currentVault.description)}} />
 			</div>
-			<div className={'grid grid-cols-2 gap-2 md:grid-cols-3'}>
+			<div className={'grid grid-cols-2 gap-2 md:grid-cols-4'}>
 				<div>
-					<p className={'pb-1 md:pb-2 text-typo-secondary'}>{'Your token balance'}</p>
-					<b className={'text-lg md:text-xl'}>
+					<p className={'text-xs text-neutral-700/50'}>{'Your token balance'}</p>
+					<b className={'text-lg'}>
 						{balanceOfToken.isZero() ? '-' : format.bigNumberAsAmount(
 							balanceOfToken,
 							currentVault?.decimals,
@@ -91,8 +92,8 @@ function	OverviewCard({currentVault}: TOverviewCard): ReactElement {
 					</b>
 				</div>
 				<div>
-					<p className={'pb-1 md:pb-2 text-typo-secondary'}>{'Your vault shares'}</p>
-					<b className={'text-lg md:text-xl'}>
+					<p className={'text-xs text-neutral-700/50'}>{'Your vault shares'}</p>
+					<b className={'text-lg'}>
 						{shareOfVault.isZero() ? '-' : format.bigNumberAsAmount(
 							shareOfVault,
 							currentVault?.decimals,
@@ -101,8 +102,8 @@ function	OverviewCard({currentVault}: TOverviewCard): ReactElement {
 					</b>
 				</div>
 				<div>
-					<p className={'pb-1 md:pb-2 text-typo-secondary'}>{'Your shares value'}</p>
-					<b className={'text-lg md:text-xl'}>
+					<p className={'text-xs text-neutral-700/50'}>{'Your shares value'}</p>
+					<b className={'text-lg'}>
 						{`${format.amount(format.toNormalizedValue(shareOfVault, currentVault.decimals) * format.toNormalizedValue(priceOfVault, currentVault?.decimals || 18), 2, 2)} $`}
 					</b>
 				</div>

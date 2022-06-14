@@ -30,7 +30,7 @@ function	VaultCard({currentVault}: {currentVault: TVault}): ReactElement {
 								</div>
 								<div className={'flex flex-col text-right'}>
 									<p className={'text-xs text-neutral-700'}>{'APY'}</p>
-									<b className={'text-4xl'}>{`${utils.format.amount(currentVault.apy.net_apy * 1000, 2, 2)}%`}</b>
+									<b className={'text-4xl'}>{(currentVault.apy.net_apy * 100).toFixed(2) === '0.00' ? '-' : `${utils.format.amount(currentVault.apy.net_apy * 100, 2, 2)}%`}</b>
 								</div>
 							</div>
 							<div>

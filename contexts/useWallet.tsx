@@ -1,12 +1,12 @@
 import	React, {ReactElement, useContext, createContext}		from	'react';
 import	{Contract}												from	'ethcall';
-import	{useSettings, useWeb3}												from	'@yearn-finance/web-lib/contexts';
+import	{useSettings, useWeb3}									from	'@yearn-finance/web-lib/contexts';
 import	{format, toAddress, providers, performBatchedUpdates}	from	'@yearn-finance/web-lib/utils';
 import	VAULT_V2_ABI											from	'utils/abi/vault.v2.abi';
 import	ERC20_ABI												from	'utils/abi/erc20.abi';
 import	LENS_ABI												from	'utils/abi/lens.abi';
 import type * as TWalletTypes									from	'contexts/useWallet.d';
-import {TVault} from './useYearn.d';
+import type {TVault}											from	'contexts/useYearn.d';
 
 const	defaultProps = {
 	balances: {},
@@ -16,6 +16,15 @@ const	defaultProps = {
 	updateVaultData: async (): Promise<void> => undefined
 };
 
+/* 🔵 - Yearn Finance **********************************************************
+** This context controls most of the user's wallet data we may need to
+** interact with our app, aka mostly the balances, the allowances and the token
+** prices.
+** All theses data are fetched on chain via a multicall, using the lens contract
+** for the prices, and it populates an object {[token.address]: element} for an
+** easy access through our app.
+** On disconnect or network change, data are re-fetched and replaced.
+******************************************************************************/
 const	WalletContext = createContext<TWalletTypes.TWalletContext>(defaultProps);
 export const WalletContextApp = ({children, vaults}: {children: ReactElement, vaults: TVault[]}): ReactElement => {
 	const	{provider, isDisconnected, address, chainID} = useWeb3();
