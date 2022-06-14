@@ -5,27 +5,15 @@ import	{AddressWithActions, Card}									from	'@yearn-finance/web-lib/component
 import	{parseMarkdown, toAddress, format, performBatchedUpdates}	from	'@yearn-finance/web-lib/utils';
 import	{useWeb3}													from	'@yearn-finance/web-lib/contexts';
 import	useWallet													from	'contexts/useWallet';
-
-type TOverviewCard = {
-	currentVault: {
-		address: string,
-		name: string,
-		description: string,
-		decimals: number,
-		token: {
-			icon: string,
-			address: string
-		}
-	}
-}
+import	type {TVault}												from	'contexts/useYearn.d';
 
 /* 🔵 - Yearn Finance **********************************************************
 ** The OverviewCard component is a simple card used to display some relevant
 ** info about the vault. Name, address, shares and balances, description and 
 ** price are the current one, but we could imagine any cool info there.
 ******************************************************************************/
-function	OverviewCard({currentVault}: TOverviewCard): ReactElement {
-	const	{isActive, address} = useWeb3();
+function	OverviewCard({currentVault, address}: {currentVault?: TVault, address: string}): ReactElement {
+	const	{isActive} = useWeb3();
 	const	{balances, prices, useWalletNonce} = useWallet();
 	const	[shareOfVault, set_shareOfVault] = React.useState(ethers.constants.Zero);
 	const	[balanceOfToken, set_balanceOfToken] = React.useState(ethers.constants.Zero);
@@ -39,9 +27,9 @@ function	OverviewCard({currentVault}: TOverviewCard): ReactElement {
 	**************************************************************************/
 	React.useEffect((): (() => void) => {
 		performBatchedUpdates((): void => {
-			set_shareOfVault(format.BN(balances[toAddress(currentVault.address)]?.raw));
-			set_balanceOfToken(format.BN(balances[toAddress(currentVault.token.address)]?.raw));
-			set_priceOfVault(format.BN(prices[toAddress(currentVault.address)]?.raw));
+			set_shareOfVault(format.BN(balances[toAddress(address)]?.raw));
+			set_balanceOfToken(format.BN(balances[toAddress(currentVault?.token?.address)]?.raw));
+			set_priceOfVault(format.BN(prices[toAddress(address)]?.raw));
 		});
 		return (): void => {
 			performBatchedUpdates((): void => {
@@ -50,7 +38,7 @@ function	OverviewCard({currentVault}: TOverviewCard): ReactElement {
 				set_priceOfVault(ethers.constants.One);
 			});
 		};
-	}, [balances, isActive, prices, currentVault.address, currentVault?.token?.address, useWalletNonce]);
+	}, [balances, isActive, prices, address, currentVault?.token?.address, useWalletNonce]);
 
 
 	/* 🔵 - Yearn Finance ******************************************************
@@ -59,15 +47,14 @@ function	OverviewCard({currentVault}: TOverviewCard): ReactElement {
 	** This function is set in a callback for performance reasons.
 	**************************************************************************/
 	const	getShareValue = React.useCallback((): string => {
-		const	_amount = format.toNormalizedValue(shareOfVault, currentVault.decimals);
+		const	_amount = format.toNormalizedValue(shareOfVault, currentVault?.decimals || 18);
 		const	_price = format.toNormalizedValue(priceOfVault, currentVault?.decimals || 18);
 		const	_value = (_amount * _price);
-		console.log(Number(_value.toFixed(2)), _value);
 		if (Number(_value) === 0) {
 			return ('-');
 		}
 		return (`${format.amount(_value)} $`);
-	}, [shareOfVault, currentVault.decimals, priceOfVault]);
+	}, [shareOfVault, currentVault?.decimals, priceOfVault]);
 
 	/* 🔵 - Yearn Finance ******************************************************
 	** Main render of the page.
@@ -75,18 +62,18 @@ function	OverviewCard({currentVault}: TOverviewCard): ReactElement {
 	return (
 		<Card className={'col-span-1 md:col-span-3'}>
 			<div className={'flex flex-row items-start mb-6 space-x-6'}>
-				<Image
-					src={currentVault.token.icon}
+				{currentVault?.token?.icon ? <Image
+					src={currentVault?.token?.icon || ''}
 					width={80}
 					height={80}
-					className={'min-w-[80px]'} />
+					className={'min-w-[80px]'} /> : <div className={'w-[80px] h-[80px] rounded-full bg-neutral-0'} />}
 				<div>
 					<h2 className={'-mt-1 -mb-2 text-xl font-bold md:text-5xl text-neutral-700'}>
-						{currentVault.name}
+						{currentVault?.name || ''}
 					</h2>
 					<AddressWithActions
 						className={'text-sm font-normal '}
-						address={address} />
+						address={toAddress(address)} />
 				</div>
 
 			</div>
@@ -94,7 +81,7 @@ function	OverviewCard({currentVault}: TOverviewCard): ReactElement {
 				<b>{'About'}</b>
 				<p
 					className={'text-neutral-700/70'}
-					dangerouslySetInnerHTML={{__html: parseMarkdown(currentVault.description)}} />
+					dangerouslySetInnerHTML={{__html: parseMarkdown(currentVault?.description || '')}} />
 			</div>
 			<div className={'grid grid-cols-2 gap-2 md:grid-cols-4'}>
 				<div>

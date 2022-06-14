@@ -89,16 +89,15 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 	** day data an construct the growth graph. We need to take the last 365
 	** days to get our full set.
 	**********************************************************************/
-	const	{data: graphData} = useSWR(
+	const	{data: graphData} = useSWR(address ?
 		`{
-			vault(id: "${address.toLowerCase()}") {
+			vault(id: "${address?.toLowerCase()}") {
 				vaultDayData(orderBy: timestamp, orderDirection: desc, first: 365) {
 					timestamp
 					pricePerShare
 				}
 			}
-		}`,
-		(query: string): any => request(networks[chainID].graphURI, query)
+		}` : null, (query: string): any => request(networks[chainID].graphURI, query)
 	);
 
 	/* 🔵 - Yearn Finance **************************************************

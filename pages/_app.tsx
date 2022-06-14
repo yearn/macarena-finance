@@ -111,15 +111,12 @@ function	WithLayout(props: AppProps): ReactElement {
 			<div className={'flex flex-col mx-auto mb-0 w-full max-w-6xl'}>
 				<AnimatePresence exitBeforeEnter onExitComplete={handleExitComplete}>
 					<motion.div
-						key={router.asPath}
+						key={router.pathname}
 						initial={'initial'}
 						animate={'enter'}
 						exit={'exit'}
 						variants={thumbnailVariants}>
-						<Component
-							key={router.route}
-							router={props.router}
-							{...pageProps} />
+						<Component {...pageProps} />
 					</motion.div>
 				</AnimatePresence>
 			</div>

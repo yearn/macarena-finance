@@ -1,26 +1,28 @@
 import	React, {ReactElement}				from	'react';
 import	Link								from	'next/link';
-import	axios								from	'axios';
+import	{useRouter}							from	'next/router';
 import	{AddressWithActions, Card}			from	'@yearn-finance/web-lib/components';
 import	{parseMarkdown, toAddress}			from	'@yearn-finance/web-lib/utils';
 import	{Chevron}							from	'@yearn-finance/web-lib/icons';
+import	{useWeb3}							from	'@yearn-finance/web-lib/contexts';
 import	useYearn							from	'contexts/useYearn';
 import	DepositCard							from	'components/vault/DepositCard';
 import	OverviewCard						from	'components/vault/OverviewCard';
 import	ChartCard							from	'components/vault/ChartCard';
 import type {TVault}						from	'contexts/useYearn.d';
 
-function	Vault({address, tokenAddress, description, icon, name, decimals, chainID}: TVault & {
-	chainID: number,
-	tokenAddress: string
-}): ReactElement {
+function	Vault(): ReactElement {
+	const	router = useRouter();
 	const	{vaults} = useYearn();
-	const	[currentVault, set_currentVault] = React.useState<TVault | undefined>(vaults.find((vault): boolean => toAddress(vault.address) === address));
+	const	{chainID} = useWeb3();
+	const	[currentVault, set_currentVault] = React.useState<TVault | undefined>(vaults.find((vault): boolean => toAddress(vault.address) === router.query.address));
 
 	React.useEffect((): void => {
-		set_currentVault(vaults.find((vault): boolean => toAddress(vault.address) === toAddress(address)));
-	}, [vaults, address]);
-
+		if (router.query.address) {
+			const	_currentVault = vaults.find((vault): boolean => toAddress(vault.address) === toAddress(router.query.address as string));
+			set_currentVault(_currentVault);
+		}
+	}, [vaults, router.query.address]);
 
 	/* 🔵 - Yearn Finance ******************************************************
 	** Main render of the page.
@@ -35,18 +37,10 @@ function	Vault({address, tokenAddress, description, icon, name, decimals, chainI
 			</Link>
 			<div className={'grid grid-cols-1 gap-4 md:grid-cols-5'}>
 				<OverviewCard
-					currentVault={{
-						address,
-						name,
-						description,
-						decimals,
-						token: {
-							icon,
-							address: tokenAddress
-						}
-					}} />
+					address={router.query.address as string}
+					currentVault={currentVault} />
 				<ChartCard
-					address={address}
+					address={router.query.address as string}
 					price={currentVault?.tvl?.price || 0}
 					chainID={chainID} />
 			</div>
@@ -82,63 +76,6 @@ function	Vault({address, tokenAddress, description, icon, name, decimals, chainI
 			</div>
 		</div>
 	);
-}
-
-export async function getStaticPaths(): Promise<unknown> {
-	const	[{data: dataMainnet}, {data: dataFtm}] = await Promise.all([
-		axios.get('https://api.yearn.finance/v1/chains/1/vaults/all'),
-		axios.get('https://api.yearn.finance/v1/chains/250/vaults/all')
-	]);
-	const	paths = [...dataMainnet, ...dataFtm].map((vault: {address: string}): unknown => ({
-		params: {address: vault.address}
-	}));
-
-	return ({paths: paths, fallback: false});
-}
-
-export async function getStaticProps({params}: {params: {address: string}}): Promise<unknown> {
-	const	address = toAddress(params.address);
-	const	[_vaultsMainnet, _vaultsFtm] = await Promise.all([
-		axios.get('https://api.yearn.finance/v1/chains/1/vaults/all'),
-		axios.get('https://api.yearn.finance/v1/chains/250/vaults/all')
-	]);
-
-	let		chainID = 1;
-	let		vault = _vaultsMainnet.data.find((vault: {address: string}): boolean => toAddress(vault.address) === toAddress(address));
-	if (!vault) {
-		vault = _vaultsFtm.data.find((vault: {address: string}): boolean => toAddress(vault.address) === toAddress(address));
-		if (vault) {
-			chainID = 250;
-		}
-	}
-
-	const	[_token] = await Promise.allSettled([
-		axios.get(`https://meta.yearn.finance/api/${chainID}/tokens/${vault.token.address}`)
-	]);
-	if (_token.status === 'rejected') {
-		console.error(`failed to fetch vaults: ${_token.reason}`);
-		return {props: {
-			address,
-			icon: vault.token.icon,
-			name: vault.display_name || vault.name,
-			decimals: vault.decimals,
-			tokenSymbol: vault.token.symbol,
-			tokenAddress: vault.token.address,
-			description: '',
-			chainID
-		}};
-	}
-
-	return {props: {
-		address,
-		icon: vault.token.icon,
-		name: vault.display_name || vault.name,
-		decimals: vault.decimals,
-		tokenSymbol: vault.token.symbol,
-		tokenAddress: vault.token.address,
-		description: (_token?.value.data?.description || '').replace(/{{token}}/g, vault.token.symbol),
-		chainID
-	}};
 }
 
 export default Vault;
