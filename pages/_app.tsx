@@ -191,7 +191,7 @@ function	KBarWrapper(): React.ReactElement {
 				keywords: `${vault.display_name || vault.name} ${vault.symbol} ${vault.address}`,
 				section: 'Vaults',
 				perform: async (): Promise<boolean> => router.push(`/vault/${vault.address}`),
-				icon: <Image src={vault.icon} alt={vault.display_name || vault.name} width={36} height={36} />,
+				icon: <Image src={vault.token.icon} alt={vault.display_name || vault.name} width={36} height={36} />,
 				subtitle: `${vault.address} - ${vault.token.symbol}`
 			}));
 		}

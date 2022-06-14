@@ -1,7 +1,7 @@
 import	React, {ReactElement, useContext, createContext}	from	'react';
 import	axios												from	'axios';
 import	NProgress											from	'nprogress';
-import	{useWeb3}											from	'@yearn-finance/web-lib/contexts';
+import	{useSettings, useWeb3}								from	'@yearn-finance/web-lib/contexts';
 import	{performBatchedUpdates, toAddress}					from	'@yearn-finance/web-lib/utils';
 import	{WalletContextApp}									from	'contexts/useWallet';
 import type {TToken, TVault, TVaultAPI}						from	'contexts/useYearn.d';
@@ -13,17 +13,18 @@ type	TYearnContext = {
 const	YearnContext = createContext<TYearnContext>({vaults: [], nonce: 0});
 export const YearnContextApp = ({children}: {children: ReactElement}): ReactElement => {
 	const	{chainID} = useWeb3();
+	const	{networks} = useSettings();
 	const	[vaults, set_vaults] = React.useState<TVault[]>([]);
 	const	[nonce, set_nonce] = React.useState(0);
 
 	const getYearnVaults = React.useCallback(async (): Promise<void> => {
 		NProgress.start();
-
+		const	networkData = networks[chainID];
 		const	[api, meta, tok, vs] = await Promise.allSettled([
-			axios.get(`https://api.yearn.finance/v1/chains/${chainID}/vaults/all`),
-			axios.get(`https://meta.yearn.finance/api/${chainID}/strategies/all`),
-			axios.get(`https://meta.yearn.finance/api/${chainID}/tokens/all`),
-			axios.get(`https://meta.yearn.finance/api/${chainID}/vaults/all`)
+			axios.get(`${networkData.apiURI}/vaults/all`),
+			axios.get(`${networkData.metaURI}/strategies/all`),
+			axios.get(`${networkData.metaURI}/tokens/all`),
+			axios.get(`${networkData.metaURI}/vaults/all`)
 		]);
 
 		let	strategies = [];
@@ -196,7 +197,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 			set_nonce((n): number => n + 1);
 			NProgress.done();
 		});
-	}, [chainID]);
+	}, [chainID, networks]);
 
 	React.useEffect((): void => {
 		getYearnVaults();

@@ -178,7 +178,7 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 	** While the chartjs-plugin-zoom plugin is not loaded, skip the render.
 	**********************************************************************/
 	if (!isInit) {
-		return <div />;
+		return <Card className={'overflow-hidden col-span-1 w-full max-w-full md:col-span-2'} padding={'none'} />;
 	}
 
 	/* 🔵 - Yearn Finance **************************************************
