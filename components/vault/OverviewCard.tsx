@@ -54,6 +54,22 @@ function	OverviewCard({currentVault}: TOverviewCard): ReactElement {
 
 
 	/* 🔵 - Yearn Finance ******************************************************
+	** Based on the amount inputed and the prices of vault, determine the
+	** expected shares to receive if the user deposits `amount` tokens.
+	** This function is set in a callback for performance reasons.
+	**************************************************************************/
+	const	getShareValue = React.useCallback((): string => {
+		const	_amount = format.toNormalizedValue(shareOfVault, currentVault.decimals);
+		const	_price = format.toNormalizedValue(priceOfVault, currentVault?.decimals || 18);
+		const	_value = (_amount * _price);
+		console.log(Number(_value.toFixed(2)), _value);
+		if (Number(_value) === 0) {
+			return ('-');
+		}
+		return (`${format.amount(_value)} $`);
+	}, [shareOfVault, currentVault.decimals, priceOfVault]);
+
+	/* 🔵 - Yearn Finance ******************************************************
 	** Main render of the page.
 	**************************************************************************/
 	return (
@@ -104,7 +120,7 @@ function	OverviewCard({currentVault}: TOverviewCard): ReactElement {
 				<div>
 					<p className={'text-xs text-neutral-700/50'}>{'Your shares value'}</p>
 					<b className={'text-lg'}>
-						{`${format.amount(format.toNormalizedValue(shareOfVault, currentVault.decimals) * format.toNormalizedValue(priceOfVault, currentVault?.decimals || 18), 2, 2)} $`}
+						{getShareValue()}
 					</b>
 				</div>
 			</div>

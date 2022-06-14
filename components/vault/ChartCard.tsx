@@ -102,11 +102,11 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 	);
 
 	/* 🔵 - Yearn Finance **************************************************
-	** Set the initial chart scale to 30 days
+	** Set the initial chart scale to max days
 	**********************************************************************/
 	React.useEffect((): void => {
-		set_currentData(data30d);
-	}, [data30d]);
+		set_currentData(data365d);
+	}, [data365d]);
 
 	/* 🔵 - Yearn Finance **************************************************
 	** When the data are available from the useSWR hook, we can sort them
@@ -192,22 +192,22 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 					<div className={'grid grid-cols-4 gap-2'}>
 						<div
 							onClick={(): void => set_currentData(data7d)}
-							className={`py-1 px-2 text-xs rounded-default cursor-pointer border border-background-variant ${currentData.length === 7 ? 'bg-background' : ''}`}>
+							className={`py-1 px-2 text-xs rounded-default cursor-pointer border ${currentData.length === 7 ? 'bg-accent-500 text-neutral-100 border-black' : 'text-neutral-500/70 border-neutral-500/70'}`}>
 							{'7 days'}
 						</div>
 						<div
 							onClick={(): void => set_currentData(data14d)}
-							className={`py-1 px-2 text-xs rounded-default cursor-pointer border border-background-variant ${currentData.length === 14 ? 'bg-background' : ''}`}>
+							className={`py-1 px-2 text-xs rounded-default cursor-pointer border ${currentData.length === 14 ? 'bg-accent-500 text-neutral-100 border-black' : 'text-neutral-500/70 border-neutral-500/70'}`}>
 							{'14 days'}
 						</div>
 						<div
 							onClick={(): void => set_currentData(data30d)}
-							className={`py-1 px-2 text-xs rounded-default cursor-pointer border border-background-variant ${currentData.length == 30 ? 'bg-background' : ''}`}>
+							className={`py-1 px-2 text-xs rounded-default cursor-pointer border ${currentData.length == 30 ? 'bg-accent-500 text-neutral-100 border-black' : 'text-neutral-500/70 border-neutral-500/70'}`}>
 							{'30 days'}
 						</div>
 						<div
 							onClick={(): void => set_currentData(data365d)}
-							className={`py-1 px-2 text-xs rounded-default cursor-pointer border border-background-variant ${currentData.length > 30 ? 'bg-background' : ''}`}>
+							className={`py-1 px-2 text-xs rounded-default cursor-pointer border ${currentData.length > 30 ? 'bg-accent-500 text-neutral-100 border-black' : 'text-neutral-500/70 border-neutral-500/70'}`}>
 							{'365 days'}
 						</div>
 					</div>

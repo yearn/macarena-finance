@@ -277,7 +277,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 										</div>
 										<div className={'flex justify-end'}>
 											<p className={'z-10 pl-2 text-right bg-neutral-0 text-typo-secondary'}>
-												{(getWithdrawReceiveTokens()).toFixed(2)}
+												{utils.format.amount(getWithdrawReceiveTokens(), 2, 6)}
 											</p>
 										</div>
 									</dd>
@@ -291,7 +291,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 										</div>
 										<div className={'flex justify-end'}>
 											<p className={'z-10 pl-2 text-right bg-neutral-0 text-typo-secondary'}>
-												{`${utils.format.amount(getWithdrawReceiveValue(), 2, 2)} $`}
+												{`$ ${utils.format.amount(getWithdrawReceiveValue(), 2, 2)}`}
 											</p>
 										</div>
 									</dd>
@@ -337,7 +337,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 									</div>
 									<div className={'flex justify-end'}>
 										<p className={'z-10 pl-2 text-right bg-neutral-0 text-typo-secondary'}>
-											{(getDepositReceiveTokens()).toFixed(2)}
+											{utils.format.amount(getDepositReceiveTokens(), 2, 6)}
 										</p>
 									</div>
 								</dd>
@@ -351,7 +351,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 									</div>
 									<div className={'flex justify-end'}>
 										<p className={'z-10 pl-2 text-right bg-neutral-0 text-typo-secondary'}>
-											{`${utils.format.amount(getDepositReceiveValue(), 2, 2)} $`}
+											{`$ ${utils.format.amount(getDepositReceiveValue(), 2, 2)}`}
 										</p>
 									</div>
 								</dd>
