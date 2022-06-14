@@ -1,0 +1,127 @@
+/* This will load Tailwindcss + all the overwrite from Yearn lib */
+@import '@yearn-finance/web-lib/dist/style.css';
+
+* {
+	@apply font-mono;
+}
+
+:root body[data-theme="macarena"] {
+	--default-rounded: 2px;
+	--color-neutral-0: 279 37% 17%;
+	--color-neutral-100: 279 36% 27%;
+	--color-neutral-200: 279 36% 34%;
+	--color-neutral-300: 279 36% 40%;
+	--color-neutral-400: 279 37% 17%;
+	--color-neutral-500: 0 0% 90%;
+	--color-neutral-700: 0 0% 100%;
+
+	--color-primary-100: 279 36% 34%;
+	--color-primary-200: 279 36% 32%;
+	/* --color-primary-200: 225 47% 41%; */
+	--color-primary-500: 49 100% 50%;
+	--color-primary-600: 49 100% 47%;
+	--color-accent-500: 49 100% 50%;
+	--color-accent-600: 49 100% 47%;
+
+	@apply bg-neutral-200;
+
+	& .yearn--button {
+		@apply h-10;
+		&[data-variant="filled"] {
+			@apply border border-black;
+		}
+	}
+
+	& .yearn--card {
+		@apply border border-neutral-200 !shadow-none;
+	}
+
+	& .yearn--searchBox-wrapper {
+		--searchBox-text-color: hsl(var(--color-neutral-500));
+		--searchBox-border-color: hsl(var(--color-neutral-300));
+		--searchBox-bg-color: hsl(var(--color-neutral-0));
+		--searchBox-border-width: 1px;
+	}
+	& .yearn--searchBox {
+		@apply focus-within:border-neutral-200;
+	}
+
+	& .yearn--banner {
+		--banner-bg-color: hsl(var(--color-primary-100));
+		--banner-text-color: hsl(var(--color-neutral-700));
+		--banner-border-color: hsl(var(--color-neutral-200));
+		--banner-border-width: 2px;
+	}
+
+	& .yearn--elementWithActions {
+		--elementWithActions-text-color: hsl(var(--color-neutral-700));
+		--elementWithActions-action-color: hsl(var(--color-primary-500));
+		--elementWithActions-action-color-hover: hsl(var(--color-primary-600));
+	}
+
+	& .yearn--dropdown-menu {
+		--dropdown-text-color: hsl(var(--color-primary-500));
+		--dropdown-bg-color: hsl(var(--color-neutral-300));
+		--dropdown-bg-color-active: hsl(var(--color-primary-200));
+		--dropdown-border-width: 0px;
+		--dropdown-border-color: black;
+	}
+
+	& .macarena--kbar-wrapper {
+		@apply rounded-default border border-black;
+	}
+	& .macarena--kbar {
+		@apply flex flex-row items-center py-2 px-4 w-full min-w-[248px] h-10 transition-colors cursor-pointer text-primary-500 focus-within:border-primary-500 bg-primary-100;
+
+		& .macarena--kbar-key {
+			@apply text-sm opacity-60;
+		}
+		& .macarena--kbar-searchIcon {
+			@apply mr-2 w-4 min-w-[16px] h-4 text-neutral-500/60;
+		}
+		& .macarena--kbar-searchLabel {
+			@apply flex items-center h-10 yearn--searchBox-input text-neutral-500/60;
+		}
+	}
+
+	& .macarena--header {
+		@apply pb-1 rounded-b-default bg-neutral-400;
+		& > div {
+			@apply bg-neutral-100;
+		}
+	}
+	& .macarena--filter {
+		@apply rounded-default bg-neutral-100 border-primary-500;
+		& > p {@apply text-primary-500;}
+		&:hover {
+			@apply border-black bg-primary-500;
+			& > p {@apply text-neutral-100;}
+		}
+
+		&[aria-selected="true"] {
+			@apply border-black bg-primary-500;
+			& > p {@apply text-neutral-100;}
+			&:hover {
+				@apply bg-primary-600;
+			}
+		}
+	}
+	& .macarena--vaultCard {
+		@apply rounded-default bg-neutral-100;
+	}
+
+	& .yearn--modal {
+		@apply md:max-w-2xl;
+	}
+
+	& .yearn--modalLogin-card {
+		@apply bg-neutral-0 hover:bg-accent-500;
+		& > b {@apply transition-colors;}
+		& > p {@apply transition-colors;}
+		&:hover {
+			& > b {@apply mt-2 text-xl text-neutral-100;}
+			& > p {@apply text-neutral-100;}
+		}
+	}
+	
+}
