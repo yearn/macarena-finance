@@ -61,10 +61,10 @@ function	Header(): ReactElement {
 			<div className={'mx-auto w-full h-full rounded-sm bg-neutral-0'}>
 				<div className={'mx-auto w-full max-w-6xl h-full'}>
 					<div className={'grid grid-cols-3 justify-center w-full h-full'}>
-						<div aria-label={'search'} className={'hidden justify-start items-center md:flex '}>
+						<div aria-label={'search'} className={'hidden justify-start items-center md:flex'}>
 							<KBarButton />
 						</div>
-						<div aria-label={'logo'} className={'flex justify-center items-center'}>
+						<div aria-label={'logo'} className={'flex col-span-3 justify-center items-center md:col-span-1'}>
 							<LogoMacarena />
 						</div>
 						<div aria-label={'wallet and network'} className={'hidden flex-row justify-end items-center space-x-4 md:flex'}>
