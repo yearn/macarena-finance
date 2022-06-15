@@ -1,0 +1,45 @@
+name: Partnership Request
+description: Request your PartnerID to be registered to get a part of the fees on the funds deposited through your project
+labels: [partnership request]
+body:
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is the aim and the outcomes of your project?
+      placeholder: I'm trying to solve…
+    validations:
+      required: true
+  - type: textarea
+    id: plan
+    attributes:
+      label: Plan
+      description: What are the points of your action plan?
+      placeholder: I'm going to solve it…
+    validations:
+      required: true
+  - type: textarea
+    id: people
+    attributes:
+      label: People
+      description: |
+        Who are the people working on the project? List their responsibilities and name your leader.
+        
+        If this request is supported by a current contributor, name them.
+    validations:
+      required: true
+  - type: input
+    id: partnerID
+    attributes:
+      label: partnerID
+      description: Which address are you using as tracker
+    validations:
+      required: true
+  - type: checkboxes
+    id: condition
+    attributes:
+      label: Condition
+      description: You take a look to the partnership agreement and you agree with it
+      options:
+        - label: I agree
+          required: true
