@@ -41,7 +41,7 @@ and
 
 Customize the website css theme:
 
-1. Change theme name in [`_document.tsk at line 26`](https://github.com/yearn/macarena-finance/blob/main/pages/_document.tsx#L26) and [`style.css at line 8`](https://github.com/yearn/macarena-finance/blob/main/style.css#L8)
+1. Change theme name in [`_document.tsx at line 26`](https://github.com/yearn/macarena-finance/blob/main/pages/_document.tsx#L26) and [`style.css at line 8`](https://github.com/yearn/macarena-finance/blob/main/style.css#L8)
 2. Customize theme css in [`style.css`](https://github.com/yearn/macarena-finance/blob/main/style.css)
 
 You can quickly change how everything looks by customizing [css variables in style.css](https://github.com/yearn/macarena-finance/blob/main/style.css#L9-L24)
