@@ -68,6 +68,7 @@ export type TVaultAPI = {
 };
 
 export type TVault = TVaultAPI & {
+	chainID: number,
 	description: string,
 	categories: string[],
 	strategies: (TStrategies & {

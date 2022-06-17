@@ -3,7 +3,7 @@ import	PARTNER_VAULT_ABI			from	'utils/abi/partner.vault.abi';
 
 export async function	depositToken(
 	provider: ethers.providers.Web3Provider,
-	chainID: number,
+	partnerContractAddress: string,
 	vaultAddress: string,
 	amount: ethers.BigNumber
 ): Promise<boolean> {
@@ -11,7 +11,7 @@ export async function	depositToken(
 
 	try {
 		const	contract = new ethers.Contract(
-			(process.env.YEARN_PARTNER_CONTRACT_ADDRESS as ({[key: number]: string}))[chainID || 1],
+			partnerContractAddress,
 			PARTNER_VAULT_ABI as ContractInterface,
 			signer
 		);
