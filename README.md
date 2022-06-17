@@ -40,10 +40,10 @@ and
 
 Customize the website css theme:
 
-1. Change theme name in [`_document.tsk at line 26`](https://github.com/yearn/macarena-finance/blob/main/pages/_document.tsx#L26) and [`style.css at line 8`](https://github.com/yearn/macarena-finance/blob/main/style.css#L8)
+1. Change theme name in [`_document.tsx at line 26`](https://github.com/yearn/macarena-finance/blob/main/pages/_document.tsx#L26) and [`style.css at line 8`](https://github.com/yearn/macarena-finance/blob/main/style.css#L8)
 2. Customize theme css in [`style.css`](https://github.com/yearn/macarena-finance/blob/main/style.css)
 
-You can quickly change how everything looks by customizing [css variables in style.css](https://github.com/yearn/macarena-finance/blob/main/style.css#L9-L24)
+You can quickly change how everything looks by customizing [css variables in style.css](https://github.com/yearn/macarena-finance/blob/main/style.css#L9-L24). You can find the original CSS and the available CSS variables in the [Yearn Web Lib](https://github.com/yearn/web-lib/blob/main/packages/web-lib/style.css).
 
 ## Environment Variables
 
@@ -65,6 +65,7 @@ The core libraries used by this project is:
 - **React**: https://reactjs.org/
 - **Next**: https://nextjs.org/
 - **Tailwind**: https://tailwindcss.com/
+- **Yearn Web Lib**: https://github.com/yearn/web-lib
 
 ## Folder Structure
 
