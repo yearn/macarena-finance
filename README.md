@@ -36,7 +36,7 @@ The core tech used by this project is:
 
 ### [/components](./components)
 
-Individual UI components that are reused across pages, like buttons and charts
+Individual UI components reused across pages, like buttons and charts
 
 ### [/contexts](./contexts)
 
@@ -46,13 +46,13 @@ Individual components with no UI that helps manage the application state
 
 Each page corresponds to a route in nextjs. Any file created in this folder can be accessed through url routes, for example if you create a page "test.tsx" you will be able to access it locally at `http://localhost:3000/test`
 
-Pages that start with `_` like `_app.tsx` and `_document.tsx` are are the application's entry point and are handled by NextJS automatically
+Pages that start with `_` like `_app.tsx` and `_document.tsx` are the application's entry point and are handled by NextJS automatically
 
 Read more about how to build app navigation at [NextJS Router Docs](https://nextjs.org/docs/api-reference/next/router#usage)
 
 ### [/utils](./utils)
 
-Stateless functions that can be used at any file
+Stateless functions to be reused at any file to transform data
 
 ### [/public](./public)
 
