@@ -5,8 +5,7 @@ Macarena finance is a simple UI for Yearn Finance, made to be forked!
 
 Running your own instance of Yearn makes you eligible to earn fees on top of all deposits made through your UI. See information on how partnership and profit-sharing work at our [Partner Docs](https://docs.yearn.finance/partners/introduction#profit-share-model)
 
-## Table-of-content
-- [Table-of-content](#table-of-content)
+**Table-of-content**
 - [Live Demo](#live-demo)
 - [Quickstart](#quickstart)
 - [Themes](#themes)
