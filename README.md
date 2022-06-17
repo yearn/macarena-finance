@@ -5,30 +5,69 @@ Macarena finance is a simple UI for Yearn Finance, made to be forked!
 
 Running your own instance of Yearn makes you eligible to earn fees on top of all deposits made through your UI. See information on how partnership and profit-sharing work at our [Partner Docs](https://docs.yearn.finance/partners/introduction#profit-share-model)
 
-## Quickstart
+## Table-of-content
+- [Table-of-content](#table-of-content)
+- [Live Demo](#live-demo)
+- [Quickstart](#quickstart)
+- [Themes](#themes)
+- [Environment Variables](#environment-variables)
+- [Tech Stack](#tech-stack)
+- [Folder Structure](#folder-structure)
 
-**Live Demo:** https://macarena.finance/
+## Live Demo
+
+- https://macarena.finance/
+
+## Quickstart
 
 1. Clone the repository: `git clone https://github.com/yearn/macarena-finance.git`
 2. Run `yarn` to install dependencies
 3. Run `yarn run dev` to raise the developer environment
 4. Open your browser at `http://localhost:3000`  
 
-**Configuring live environment to receive profit fees**
+###  Configure profit fees address
 
 5. At [`next.config.js`](./next.config.js) change `PARTNER_ID_ADDRESS` to the address that should receive the partner fees
-6. [Follow this template](https://github.com/yearn/macarena-finance/issues/new?assignees=&labels=partnership+request&template=partnership-request.yml) to request us to enable the above ID to receive partner program profit-sharing fees
+6. Fill up [this template issue](https://github.com/yearn/macarena-finance/issues/new?assignees=&labels=partnership+request&template=partnership-request.yml) to request us to enable the above ID to receive partner program profit-sharing fees
 
-**Add or remove Yearn Vaults displayed**
+### Add or remove Yearn Vaults displayed
 
 Change the list filtering the vaults you want to show at:
 - [`contexts/useYearn.tsx` lines 61~78](https://github.com/yearn/macarena-finance/blob/main/contexts/useYearn.tsx#L61-L78)  
 and  
 - [`contexts/useYearn.tsx` lines 163~190](https://github.com/yearn/macarena-finance/blob/main/contexts/useYearn.tsx#L163-L190)
 
-## Stack
+## Themes
 
-The core tech used by this project is:
+Customize the website css theme:
+
+1. Change theme name in [`_document.tsk at line 26`](https://github.com/yearn/macarena-finance/blob/main/pages/_document.tsx#L26) and [`style.css at line 8`](https://github.com/yearn/macarena-finance/blob/main/style.css#L8)
+2. Customize theme css in [`style.css`](https://github.com/yearn/macarena-finance/blob/main/style.css)
+
+You can quickly change how everything looks by customizing [css variables in style.css](https://github.com/yearn/macarena-finance/blob/main/style.css#L9-L24)
+
+## Environment Variables
+
+Create a `.env` file in the root project path overriding any env. variable:
+
+- **WS_URL_MAINNET** custom websocket url for Ethereum Mainnet
+- **WS_URL_FANTOM** custom websocket url for Fantom
+- **RPC_URL_MAINNET** custom RPC url for Ethereum Mainnet
+- **RPC_URL_FANTOM** custom RPC url for Fantom
+- **ALCHEMY_KEY** [alchemy.com](https://www.alchemy.com/) key
+
+example `.env`:
+```
+WS_URL_MAINNET=wss://xxxxxxx
+WS_URL_FANTOM=wss://xxxxxxx
+RPC_URL_MAINNET=https://xxxxxxx
+RPC_URL_FANTOM=https://xxxxxxx
+ALCHEMY_KEY=xxxxxxx
+```
+
+## Tech Stack
+
+The core libraries used by this project is:
 
 - **TypeScript**: https://www.typescriptlang.org/
 - **React**: https://reactjs.org/
