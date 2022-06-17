@@ -160,6 +160,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 				vault.token.symbol = 'cUSDT';
 
 			vault.categories = ['simple_saver'];
+			vault.chainID = chainID;
 			if (chainID === 1 || chainID === 1337) {
 				if (toAddress(vault.address) === toAddress('0xdA816459F1AB5631232FE5e97a05BBBb94970c95')) //DAI
 					vault.categories = ['simple_saver', 'usd_stable'];
@@ -201,7 +202,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 
 	React.useEffect((): void => {
 		getYearnVaults();
-	}, [getYearnVaults, chainID]);
+	}, [getYearnVaults]);
 
 	return (
 		<YearnContext.Provider value={{vaults, nonce}}>
