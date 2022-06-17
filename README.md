@@ -21,7 +21,10 @@ Running your own instance of Yearn makes you eligible to earn fees on top of all
 
 **Add or remove Yearn Vaults displayed**
 
-* Change the list filtering the vaults you want to show at [`contexts/useYearn.tsx` lines 61~78](https://github.com/yearn/macarena-finance/blob/main/contexts/useYearn.tsx#L61-L78)
+Change the list filtering the vaults you want to show at:
+- [`contexts/useYearn.tsx` lines 61~78](https://github.com/yearn/macarena-finance/blob/main/contexts/useYearn.tsx#L61-L78)  
+and  
+- [`contexts/useYearn.tsx` lines 163~190](https://github.com/yearn/macarena-finance/blob/main/contexts/useYearn.tsx#L163-L190)
 
 ## Stack
 
