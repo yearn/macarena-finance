@@ -66,6 +66,7 @@ The core libraries used by this project is:
 - **React**: https://reactjs.org/
 - **Next**: https://nextjs.org/
 - **Tailwind**: https://tailwindcss.com/
+- **Yearn Web Lib**: https://github.com/yearn/web-lib
 
 ## Folder Structure
 
