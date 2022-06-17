@@ -3,7 +3,7 @@ import	Image								from	'next/image';
 import	{ethers}							from	'ethers';
 import	{Input, Button}						from	'@yearn-finance/web-lib/components';
 import	* as utils							from	'@yearn-finance/web-lib/utils';
-import	{useWeb3}							from	'@yearn-finance/web-lib/contexts';
+import	{useSettings, useWeb3}				from	'@yearn-finance/web-lib/contexts';
 import	Line								from	'components/icons/Line';
 import	{approveERC20}						from	'utils/actions/approveToken';
 import	{depositToken}						from	'utils/actions/depositToken';
@@ -21,6 +21,7 @@ import type {TVault}						from	'contexts/useYearn.d';
 function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	const	{chainID, isActive, address, provider} = useWeb3();
 	const	{balances, prices, allowances, updateVaultData, useWalletNonce} = useWallet();
+	const	{networks} = useSettings();
 	const	[actionType, set_actionType] = React.useState('deposit');
 	const	[amount, set_amount] = React.useState('');
 	const	[shareOfVault, set_shareOfVault] = React.useState(ethers.constants.Zero);
@@ -44,16 +45,25 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	** Please note the use of useWalletNonce to refresh data. See react deep
 	** effect for more info.
 	**************************************************************************/
-	React.useEffect((): (() => void) => {
+	React.useEffect((): void => {
 		if (currentVault) {
 			utils.performBatchedUpdates((): void => {
 				set_shareOfVault(utils.format.BN(balances[utils.toAddress(currentVault.address)]?.raw));
 				set_balanceOfToken(utils.format.BN(balances[utils.toAddress(currentVault.token.address)]?.raw));
 				set_allowanceForToken(utils.format.BN(allowances[utils.toAddress(currentVault.token.address)]?.raw));
-				if (actionType === 'deposit')
-					set_amount((balances[utils.toAddress(currentVault.token.address)]?.normalized || '').toString());
-				else
-					set_amount((balances[utils.toAddress(currentVault.address)]?.normalized || '').toString());
+				if (actionType === 'deposit') {
+					set_amount((previousAmount): string => (
+						previousAmount === ''
+							? (balances[utils.toAddress(currentVault.token.address)]?.normalized || '').toString()
+							: previousAmount
+					));
+				} else {
+					set_amount((previousAmount): string => (
+						previousAmount === ''
+							? (balances[utils.toAddress(currentVault.address)]?.normalized || '').toString()
+							: previousAmount
+					));
+				}
 				set_priceOfToken(utils.format.BN(prices[utils.toAddress(currentVault.token.address)]?.raw));
 				set_priceOfVault(utils.format.BN(prices[utils.toAddress(currentVault.address)]?.raw));
 			});
@@ -67,18 +77,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 				set_amount('');
 			});
 		}
-		return (): void => {
-			utils.performBatchedUpdates((): void => {
-				set_shareOfVault(ethers.constants.Zero);
-				set_balanceOfToken(ethers.constants.Zero);
-				set_allowanceForToken(ethers.constants.Zero);
-				set_priceOfToken(ethers.constants.Zero);
-				set_priceOfVault(ethers.constants.One);
-				set_amount('');
-			});
-		};
 	}, [currentVault, balances, address, isActive, prices, allowances, actionType, useWalletNonce]);
-
 
 	/* 🔵 - Yearn Finance ******************************************************
 	** Trigger an approve web3 action, simply trying to approve `amount` tokens
@@ -96,7 +95,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 		const	transaction = (
 			new utils.Transaction(provider, approveERC20, set_txStatusApprove).populate(
 				currentVault.token.address,
-				(process.env.YEARN_PARTNER_CONTRACT_ADDRESS as ({[key: number]: string}))[chainID || 1],
+				networks[chainID === 1337 ? 1 : chainID  || 1].partnerContractAddress,
 				utils.format.toSafeAmount(amount, balances[utils.toAddress(currentVault.token.address)].raw)
 			).onSuccess(async (): Promise<void> => {
 				await updateVaultData(currentVault);
@@ -122,7 +121,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 			return;
 		const	transaction = (
 			new utils.Transaction(provider, depositToken, set_txStatusDeposit).populate(
-				chainID,
+				networks[chainID === 1337 ? 1 : chainID  || 1].partnerContractAddress,
 				currentVault.address,
 				utils.format.toSafeAmount(amount, balances[utils.toAddress(currentVault.token.address)].raw)
 			).onSuccess(async (): Promise<void> => {

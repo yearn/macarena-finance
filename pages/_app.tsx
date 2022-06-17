@@ -2,6 +2,7 @@ import	React, {ReactElement}										from	'react';
 import	Head														from	'next/head';
 import	{AppProps}													from	'next/app';
 import	Image														from	'next/image';
+import	Link														from	'next/link';
 import	{useRouter}													from	'next/router';
 import	{DefaultSeo}												from	'next-seo';
 import	{AnimatePresence, motion}									from	'framer-motion';
@@ -12,10 +13,10 @@ import	{truncateHex}												from	'@yearn-finance/web-lib/utils';
 import	{NetworkEthereum, NetworkFantom, SocialDiscord, SocialGithub, SocialTwitter}				from	'@yearn-finance/web-lib/icons';
 import	useYearn, {YearnContextApp}									from	'contexts/useYearn';
 import	KBar														from	'components/Kbar';
+import	KBarButton													from	'components/KBarButton';
 import	LogoMacarena												from	'components/icons/LogoMacarena';
 
 import	'../style.css';
-import KBarButton from 'components/KBarButton';
 
 const transition = {duration: 0.3, ease: [0.17, 0.67, 0.83, 0.67]};
 const thumbnailVariants = {
@@ -65,7 +66,9 @@ function	Header(): ReactElement {
 							<KBarButton />
 						</div>
 						<div aria-label={'logo'} className={'flex col-span-3 justify-center items-center md:col-span-1'}>
-							<LogoMacarena />
+							<Link href={'/'}>
+								<LogoMacarena className={'cursor-pointer'} />
+							</Link>
 						</div>
 						<div aria-label={'wallet and network'} className={'hidden flex-row justify-end items-center space-x-4 md:flex'}>
 							<div className={'hidden flex-row items-center space-x-4 md:flex'}>
