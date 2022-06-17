@@ -19,7 +19,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 
 	const getYearnVaults = React.useCallback(async (): Promise<void> => {
 		NProgress.start();
-		const	networkData = networks[chainID || 1];
+		const	networkData = networks[chainID === 1337 ? 1 : chainID || 1];
 		const	[api, meta, tok, vs] = await Promise.allSettled([
 			axios.get(`${networkData.apiURI}/vaults/all`),
 			axios.get(`${networkData.metaURI}/strategies/all`),
@@ -91,7 +91,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 			** to endorse. If the vault's address match one of them, include it
 			** in the final list.
 			******************************************************************/
-			if (endorsedVaults[chainID || 1].includes(toAddress(vault.address))) {
+			if (endorsedVaults[chainID === 1337 ? 1 : chainID || 1].includes(toAddress(vault.address))) {
 				return true;
 			}
 			return false;
@@ -160,7 +160,8 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 				vault.token.symbol = 'cUSDT';
 
 			vault.categories = ['simple_saver'];
-			if (chainID === 1) {
+			vault.chainID = chainID;
+			if (chainID === 1 || chainID === 1337) {
 				if (toAddress(vault.address) === toAddress('0xdA816459F1AB5631232FE5e97a05BBBb94970c95')) //DAI
 					vault.categories = ['simple_saver', 'usd_stable'];
 				if (toAddress(vault.address) === toAddress('0xa354F35829Ae975e850e23e9615b11Da1B3dC4DE')) //usdc
@@ -201,7 +202,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 
 	React.useEffect((): void => {
 		getYearnVaults();
-	}, [getYearnVaults, chainID]);
+	}, [getYearnVaults]);
 
 	return (
 		<YearnContext.Provider value={{vaults, nonce}}>

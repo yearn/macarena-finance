@@ -58,13 +58,13 @@ export const WalletContextApp = ({children, vaults}: {children: ReactElement, va
 		const	currentProvider = provider || providers.getProvider(chainID);
 		const	ethcallProvider = await providers.newEthCallProvider(currentProvider);
 		const	userAddress = address || '0x0000000000000000010000000000000000000000'; //using this address as dummy
-		const	_vaults = vaults;
+		const	_vaults = vaults.filter((v): boolean => v.chainID === chainID || (v.chainID === 1 && chainID === 1337));
 		const	calls = [];
 
-		for (const vault of vaults) {
+		for (const vault of _vaults) {
 			const	vaultContract = new Contract(vault.address, VAULT_V2_ABI);
 			const	underlyingTokenContract = new Contract(vault.token.address, ERC20_ABI);
-			const	lensPriceContract = new Contract(networks[chainID || 1].lensAddress, LENS_ABI);
+			const	lensPriceContract = new Contract(networks[chainID === 1337 ? 1 : chainID || 1].lensAddress, LENS_ABI);
 
 			calls.push(...[
 				vaultContract.balanceOf(userAddress),
@@ -72,7 +72,7 @@ export const WalletContextApp = ({children, vaults}: {children: ReactElement, va
 				underlyingTokenContract.balanceOf(userAddress),
 				underlyingTokenContract.allowance(
 					userAddress,
-					(process.env.YEARN_PARTNER_CONTRACT_ADDRESS as ({[key: number]: string}))[chainID || 1]
+					networks[chainID === 1337 ? 1 : chainID || 1].partnerContractAddress
 				),
 				lensPriceContract.getPriceUsdcRecommended(vault.token.address)
 			]);
@@ -134,7 +134,7 @@ export const WalletContextApp = ({children, vaults}: {children: ReactElement, va
 		const	calls = [];
 		const	vaultContract = new Contract(vault.address, VAULT_V2_ABI);
 		const	underlyingTokenContract = new Contract(vault.token.address, ERC20_ABI);
-		const	lensPriceContract = new Contract(networks[chainID || 1].lensAddress, LENS_ABI);
+		const	lensPriceContract = new Contract(networks[chainID === 1337 ? 1 : chainID || 1].lensAddress, LENS_ABI);
 
 		calls.push(...[
 			vaultContract.balanceOf(userAddress),
@@ -142,7 +142,7 @@ export const WalletContextApp = ({children, vaults}: {children: ReactElement, va
 			underlyingTokenContract.balanceOf(userAddress),
 			underlyingTokenContract.allowance(
 				userAddress,
-				(process.env.YEARN_PARTNER_CONTRACT_ADDRESS as ({[key: number]: string}))[chainID || 1]
+				networks[chainID === 1337 ? 1 : chainID || 1].partnerContractAddress
 			),
 			lensPriceContract.getPriceUsdcRecommended(vault.token.address)
 		]);
