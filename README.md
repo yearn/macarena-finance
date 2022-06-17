@@ -56,14 +56,7 @@ Create a `.env` file in the root project path overriding any env. variable:
 - **RPC_URL_FANTOM** custom RPC url for Fantom
 - **ALCHEMY_KEY** [alchemy.com](https://www.alchemy.com/) key
 
-example `.env`:
-```
-WS_URL_MAINNET=wss://xxxxxxx
-WS_URL_FANTOM=wss://xxxxxxx
-RPC_URL_MAINNET=https://xxxxxxx
-RPC_URL_FANTOM=https://xxxxxxx
-ALCHEMY_KEY=xxxxxxx
-```
+Rename [`.env.example`](./.env.example) to `.env` to customize the above
 
 ## Tech Stack
 
