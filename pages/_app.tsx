@@ -67,7 +67,9 @@ function	Header(): ReactElement {
 						</div>
 						<div aria-label={'logo'} className={'flex col-span-3 justify-center items-center md:col-span-1'}>
 							<Link href={'/'}>
-								<LogoMacarena className={'cursor-pointer'} />
+								<div>
+									<LogoMacarena className={'cursor-pointer'} />
+								</div>
 							</Link>
 						</div>
 						<div aria-label={'wallet and network'} className={'hidden flex-row justify-end items-center space-x-4 md:flex'}>
