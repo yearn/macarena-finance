@@ -8,14 +8,20 @@ import type {TToken, TVault, TVaultAPI}						from	'contexts/useYearn.d';
 
 type	TYearnContext = {
 	vaults: TVault[],
-	nonce: number
+	nonce: number,
+	defaultCategories: string[]
 }
-const	YearnContext = createContext<TYearnContext>({vaults: [], nonce: 0});
+const	YearnContext = createContext<TYearnContext>({
+	vaults: [],
+	nonce: 0,
+	defaultCategories: ['Simple Saver', 'USD Stable', 'Blue Chip']
+});
 export const YearnContextApp = ({children}: {children: ReactElement}): ReactElement => {
 	const	{chainID} = useWeb3();
 	const	{networks} = useSettings();
 	const	[vaults, set_vaults] = React.useState<TVault[]>([]);
 	const	[nonce, set_nonce] = React.useState(0);
+	const	[defaultCategories, set_defaultCategories] = React.useState<string[]>([]);
 
 	const getYearnVaults = React.useCallback(async (): Promise<void> => {
 		NProgress.start();
@@ -159,36 +165,36 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 			if (vault.token.symbol === 'cDAI+cUSDC+USDT')
 				vault.token.symbol = 'cUSDT';
 
-			vault.categories = ['simple_saver'];
+			vault.categories = ['Simple Saver'];
 			vault.chainID = chainID;
 			if (chainID === 1 || chainID === 1337) {
 				if (toAddress(vault.address) === toAddress('0xdA816459F1AB5631232FE5e97a05BBBb94970c95')) //DAI
-					vault.categories = ['simple_saver', 'usd_stable'];
+					vault.categories = ['Simple Saver', 'USD Stable'];
 				if (toAddress(vault.address) === toAddress('0xa354F35829Ae975e850e23e9615b11Da1B3dC4DE')) //usdc
-					vault.categories = ['simple_saver', 'usd_stable'];
+					vault.categories = ['Simple Saver', 'USD Stable'];
 				if (toAddress(vault.address) === toAddress('0x7Da96a3891Add058AdA2E826306D812C638D87a7')) //usdt
-					vault.categories = ['simple_saver', 'usd_stable'];
+					vault.categories = ['Simple Saver', 'USD Stable'];
 				if (toAddress(vault.address) === toAddress('0xdb25cA703181E7484a155DD612b06f57E12Be5F0')) //YFI
-					vault.categories = ['simple_saver', 'blue_chip'];
+					vault.categories = ['Simple Saver', 'Blue Chip'];
 				if (toAddress(vault.address) === toAddress('0xa258C4606Ca8206D8aA700cE2143D7db854D168c')) //ETH
-					vault.categories = ['simple_saver', 'blue_chip'];
+					vault.categories = ['Simple Saver', 'Blue Chip'];
 				if (toAddress(vault.address) === toAddress('0xA696a63cc78DfFa1a63E9E50587C197387FF6C7E')) //BTC
-					vault.categories = ['simple_saver', 'blue_chip'];
+					vault.categories = ['Simple Saver', 'Blue Chip'];
 			} else if (chainID === 250) {
 				if (toAddress(vault.address) === toAddress('0x0DEC85e74A92c52b7F708c4B10207D9560CEFaf0')) //yvWFTM
-					vault.categories = ['simple_saver', 'blue_chip'];
+					vault.categories = ['Simple Saver', 'Blue Chip'];
 				if (toAddress(vault.address) === toAddress('0xEF0210eB96c7EB36AF8ed1c20306462764935607')) //yvUSDC
-					vault.categories = ['simple_saver', 'usd_stable'];
+					vault.categories = ['Simple Saver', 'USD Stable'];
 				if (toAddress(vault.address) === toAddress('0x637eC617c86D24E421328e6CAEa1d92114892439')) //yvDAI
-					vault.categories = ['simple_saver', 'usd_stable'];
+					vault.categories = ['Simple Saver', 'USD Stable'];
 				if (toAddress(vault.address) === toAddress('0x148c05caf1Bb09B5670f00D511718f733C54bC4c')) //yvUSDT
-					vault.categories = ['simple_saver', 'usd_stable'];
+					vault.categories = ['Simple Saver', 'USD Stable'];
 				if (toAddress(vault.address) === toAddress('0xCe2Fc0bDc18BD6a4d9A725791A3DEe33F3a23BB7')) //yvWETH
-					vault.categories = ['simple_saver', 'blue_chip'];
+					vault.categories = ['Simple Saver', 'Blue Chip'];
 				if (toAddress(vault.address) === toAddress('0xd817A100AB8A29fE3DBd925c2EB489D67F758DA9')) //yvWBTC
-					vault.categories = ['simple_saver', 'blue_chip'];
+					vault.categories = ['Simple Saver', 'Blue Chip'];
 				if (toAddress(vault.address) === toAddress('0x2C850cceD00ce2b14AA9D658b7Cad5dF659493Db')) //yvYFI
-					vault.categories = ['simple_saver', 'blue_chip'];
+					vault.categories = ['Simple Saver', 'Blue Chip'];
 			}
 			_vaults.push(vault);
 		}
@@ -196,6 +202,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 		performBatchedUpdates((): void => {
 			set_vaults(_vaults);
 			set_nonce((n): number => n + 1);
+			set_defaultCategories([...new Set(_vaults.map((vault): string[] => vault.categories).flat())]);
 			NProgress.done();
 		});
 	}, [chainID, networks]);
@@ -205,7 +212,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 	}, [getYearnVaults]);
 
 	return (
-		<YearnContext.Provider value={{vaults, nonce}}>
+		<YearnContext.Provider value={{vaults, nonce, defaultCategories}}>
 			<WalletContextApp vaults={vaults}>
 				{children}
 			</WalletContextApp>

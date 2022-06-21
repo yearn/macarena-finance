@@ -1,11 +1,12 @@
-import	React, {ReactElement}			from	'react';
-import	Image							from	'next/image';
-import	Link							from	'next/link';
-import	{motion}						from	'framer-motion';
-import	{Button, Card}					from	'@yearn-finance/web-lib/components';
-import	* as utils						from	'@yearn-finance/web-lib/utils';
-import	useYearn						from	'contexts/useYearn';
-import type {TVault}					from	'contexts/useYearn.d';
+import	React, {ReactElement}	from	'react';
+import	Image					from	'next/image';
+import	Link					from	'next/link';
+import	{motion}				from	'framer-motion';
+import	{Button, Card}			from	'@yearn-finance/web-lib/components';
+import	* as utils				from	'@yearn-finance/web-lib/utils';
+import	useYearn				from	'contexts/useYearn';
+import type {TVault}			from	'contexts/useYearn.d';
+import	Filters					from	'components/Filters';
 
 function	VaultCard({currentVault}: {currentVault: TVault}): ReactElement {
 	const slashMotion = {
@@ -92,10 +93,9 @@ function	Vaults({vaults}: {vaults: TVault[]}): ReactElement {
 }
 
 function	Index(): ReactElement {
-	const	defaultSelectedCategories = {usdStable: false, blueChip: false, simpleSavers: false};
-	const	{vaults, nonce: dataNonce} = useYearn();
+	const	{vaults, nonce: dataNonce, defaultCategories} = useYearn();
 	const	[filteredVaults, set_filteredVaults] = React.useState<TVault[]>([]);
-	const	[selectedCategories, set_selectedCategories] = React.useState({...defaultSelectedCategories, simpleSavers: true});
+	const	[selectedCategory, set_selectedCategory] = React.useState('');
 
 	/* 🔵 - Yearn Finance ******************************************************
 	** This effect is triggered every time the vault list or the search term is
@@ -104,42 +104,23 @@ function	Index(): ReactElement {
 	**************************************************************************/
 	React.useEffect((): void => {
 		let		_filteredVaults = [...vaults];
-		_filteredVaults = _filteredVaults.filter((vault): boolean => (
-			(selectedCategories.simpleSavers && vault.categories.includes('simple_saver'))
-			|| (selectedCategories.usdStable && vault.categories.includes('usd_stable'))
-			|| (selectedCategories.blueChip && vault.categories.includes('blue_chip'))
-		));
+		if (selectedCategory !== '')
+			_filteredVaults = _filteredVaults.filter((vault): boolean => vault.categories.includes(selectedCategory));
 		_filteredVaults = _filteredVaults.sort((a, b): number => b.apy.net_apy - a.apy.net_apy);
 		utils.performBatchedUpdates((): void => {
 			set_filteredVaults(_filteredVaults);
 		});
-	}, [dataNonce, vaults, selectedCategories]);
+	}, [dataNonce, vaults, selectedCategory]);
 
 	/* 🔵 - Yearn Finance ******************************************************
 	** Main render of the page.
 	**************************************************************************/
 	return (
 		<div className={'z-0 pb-10 w-full md:pb-20'}>
-			<div aria-label={'filters'} className={'flex flex-row justify-center items-center mb-7 -ml-1 space-x-2 md:ml-0'}>
-				<button
-					aria-selected={selectedCategories.simpleSavers}
-					onClick={(): void => set_selectedCategories({...defaultSelectedCategories, simpleSavers: true})}
-					className={'flex justify-center items-center px-2 h-8 border transition-colors cursor-pointer rounded-default macarena--filter'}>
-					<p className={'text-xs md:text-base'}>{'Simple Savers'}</p>
-				</button>
-				<button
-					aria-selected={selectedCategories.usdStable}
-					onClick={(): void => set_selectedCategories({...defaultSelectedCategories, usdStable: true})}
-					className={'flex justify-center items-center px-2 h-8 border transition-colors cursor-pointer rounded-default macarena--filter'}>
-					<p className={'text-xs md:text-base'}>{'USD Stables'}</p>
-				</button>
-				<button
-					aria-selected={selectedCategories.blueChip}
-					onClick={(): void => set_selectedCategories({...defaultSelectedCategories, blueChip: true})}
-					className={'flex justify-center items-center px-2 h-8 border transition-colors cursor-pointer rounded-default macarena--filter'}>
-					<p className={'text-xs md:text-base'}>{'Blue Chips'}</p>
-				</button>
-			</div>
+			<Filters
+				currentCategory={selectedCategory}
+				availableCategories={defaultCategories}
+				onSelect={(category: string): void => set_selectedCategory(category)} />
 
 			<Vaults vaults={filteredVaults} />
 		</div>
