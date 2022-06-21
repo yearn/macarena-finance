@@ -95,7 +95,7 @@ function	Vaults({vaults}: {vaults: TVault[]}): ReactElement {
 function	Index(): ReactElement {
 	const	{vaults, nonce: dataNonce, defaultCategories} = useYearn();
 	const	[filteredVaults, set_filteredVaults] = React.useState<TVault[]>([]);
-	const	[selectedCategory, set_selectedCategory] = React.useState('simple_saver');
+	const	[selectedCategory, set_selectedCategory] = React.useState('');
 
 	/* 🔵 - Yearn Finance ******************************************************
 	** This effect is triggered every time the vault list or the search term is
@@ -104,7 +104,8 @@ function	Index(): ReactElement {
 	**************************************************************************/
 	React.useEffect((): void => {
 		let		_filteredVaults = [...vaults];
-		_filteredVaults = _filteredVaults.filter((vault): boolean => vault.categories.includes(selectedCategory));
+		if (selectedCategory !== '')
+			_filteredVaults = _filteredVaults.filter((vault): boolean => vault.categories.includes(selectedCategory));
 		_filteredVaults = _filteredVaults.sort((a, b): number => b.apy.net_apy - a.apy.net_apy);
 		utils.performBatchedUpdates((): void => {
 			set_filteredVaults(_filteredVaults);

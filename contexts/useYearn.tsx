@@ -14,7 +14,7 @@ type	TYearnContext = {
 const	YearnContext = createContext<TYearnContext>({
 	vaults: [],
 	nonce: 0,
-	defaultCategories: ['simple_saver', 'usd_stable', 'blue_chip']
+	defaultCategories: ['Simple Saver', 'USD Stable', 'Blue Chip']
 });
 export const YearnContextApp = ({children}: {children: ReactElement}): ReactElement => {
 	const	{chainID} = useWeb3();
