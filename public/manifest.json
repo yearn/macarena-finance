@@ -1,5 +1,35 @@
 {
 	"name": "Macarena Finance",
+	"short_name": "Macarena",
 	"description": "Macarena finance, a UI for Yearn Finance that you actually want to fork",
-	"iconPath": "/favicons/favicon.svg"
+	"iconPath": "./favicons/apple-icon.png",
+	"locale": "en-US",
+	"uri": "https://macarena.finance/",
+	"og": "https://macarena.finance/og.jpeg",
+	"twitter": "@iearnfinance",
+	"github": "https://github.com/yearn/macarena-finance",
+	"icons": [
+		{
+			"src": "./favicons/android-icon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "./favicons/android-icon-144x144.png",
+			"sizes": "144x144",
+			"type": "image/png"
+		},
+		{
+			"src": "./favicons/favicon-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	],
+	"theme_color": "#603776",
+	"background_color": "#603776",
+	"title_color": "#ffd000",
+	"start_url": "/",
+	"display": "standalone",
+	"orientation": "portrait"
 }

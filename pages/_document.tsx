@@ -10,9 +10,8 @@ type TInitialProps = {
 class MyDocument extends Document {
 	static async getInitialProps(ctx: DocumentContext): Promise<TInitialProps> {
 		const initialProps = await Document.getInitialProps(ctx);
-		return {...initialProps};
+		return {...initialProps} as any;
 	}
-	
 
 	render(): ReactElement {
 		return (
@@ -23,7 +22,7 @@ class MyDocument extends Document {
 					<link rel={'preconnect'} href={'https://rawcdn.githack.com'} crossOrigin={'true'} />
 					<link href={'https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap'} rel={'stylesheet'} />
 				</Head>
-				<body className={'min-h-screen transition-colors duration-150 bg-neutral-200'} data-theme={'macarena'}> 
+				<body className={'min-h-screen bg-neutral-200 transition-colors duration-150'} data-theme={'macarena'}> 
 					<Main />
 					<NextScript />
 				</body>
