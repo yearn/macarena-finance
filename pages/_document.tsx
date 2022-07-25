@@ -12,7 +12,6 @@ class MyDocument extends Document {
 		const initialProps = await Document.getInitialProps(ctx);
 		return {...initialProps} as any;
 	}
-	
 
 	render(): ReactElement {
 		return (
