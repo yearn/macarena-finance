@@ -7,6 +7,9 @@ module.exports = withPWA({
 			'raw.githubusercontent.com'
 		]
 	},
+	pwa: {
+		dest: 'public'
+	},
 	env: {
 		//You need to change this one to your own ID!
 		PARTNER_ID_ADDRESS: '0x7eE89ddd96603669eB0CC92D81f221b756813872',
