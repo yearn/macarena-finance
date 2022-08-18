@@ -12,6 +12,7 @@ Running your own instance of Yearn makes you eligible to earn fees on top of all
 - [Environment Variables](#environment-variables)
 - [Tech Stack](#tech-stack)
 - [Folder Structure](#folder-structure)
+- [Other Docs](#other-docs)
 
 ## Live Demo
 
@@ -92,3 +93,7 @@ Stateless functions to be reused at any file to transform data
 ### [/public](./public)
 
 Static files used in the website, like images and icons
+
+## Other Docs
+
+- https://docs.yearn.finance/developers/v2/fork-yearn-ui
