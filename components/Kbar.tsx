@@ -61,8 +61,8 @@ const ResultItem = React.forwardRef((
 	return (
 		<div
 			ref={ref}
-			className={`py-3 px-4 ${active ? 'bg-neutral-100 border-neutral-400' : 'bg-transparent border-transparent'} transition-colors hover:bg-neutral-100 border-l-2 flex items-center justify-between cursor-pointer`}>
-			<div className={'flex gap-4 items-center text-sm'}>
+			className={`py-3 px-4 ${active ? 'border-neutral-400 bg-neutral-100' : 'border-transparent bg-transparent'} flex cursor-pointer items-center justify-between border-l-2 transition-colors hover:bg-neutral-100`}>
+			<div className={'flex items-center gap-4 text-sm'}>
 				{action.icon && action.icon}
 				<div style={{display: 'flex', flexDirection: 'column'}}>
 					<div>
@@ -88,7 +88,7 @@ const ResultItem = React.forwardRef((
 					{action.shortcut.map((sc: any): ReactElement => (
 						<kbd
 							key={sc}
-							className={'flex justify-center items-center p-1 w-6 h-6 text-sm text-center rounded-[4px] bg-dark/20'}>
+							className={'bg-dark/20 flex h-6 w-6 items-center justify-center rounded-[4px] p-1 text-center text-sm'}>
 							{sc}
 						</kbd>
 					))}
@@ -123,8 +123,8 @@ function RenderResults(): ReactElement {
 function	KBar(): ReactElement {
 	return (
 		<KBarPortal>
-			<KBarPositioner className={'overflow-y-auto fixed inset-0 z-[9999]'}>
-				<div className={'fixed inset-0 z-10 transition-opacity bg-[#000000]/50'} />
+			<KBarPositioner className={'fixed inset-0 z-[9999] overflow-y-auto'}>
+				<div className={'fixed inset-0 z-10 bg-[#000000]/50 transition-opacity'} />
 				<KBarAnimator style={animatorStyle} className={'z-50'}>
 					<KBarSearch style={searchStyle} />
 					<RenderResults />

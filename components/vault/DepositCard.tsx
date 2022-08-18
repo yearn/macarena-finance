@@ -240,18 +240,18 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	function	renderInputField(): ReactNode {
 		if (actionType === 'withdraw') {
 			return (
-				<div className={'grid grid-cols-1 gap-2 mt-2 md:grid-cols-1'}>
+				<div className={'mt-2 grid grid-cols-1 gap-2 md:grid-cols-1'}>
 					<div>
-						<div className={'flex flex-row ml-[-3px] space-x-2'}>
-							<div className={'aspect-square flex flex-col justify-center items-center w-24 h-24 md:w-32 md:h-32 rounded-default min-w-24 bg-neutral-200 md:min-w-32'}>
-								<div className={'w-8 h-8 md:w-12 md:h-12'}>
+						<div className={'ml-[-3px] flex flex-row space-x-2'}>
+							<div className={'rounded-default min-w-24 md:min-w-32 flex aspect-square h-24 w-24 flex-col items-center justify-center bg-neutral-200 md:h-32 md:w-32'}>
+								<div className={'h-8 w-8 md:h-12 md:w-12'}>
 									<Image width={48} height={48} src={currentVault?.icon} />
 								</div>
-								<div className={'px-1 mt-2 text-sm text-center md:px-2 md:mt-4 md:text-base'}>
+								<div className={'mt-2 px-1 text-center text-sm md:mt-4 md:px-2 md:text-base'}>
 									<b>{currentVault?.symbol || ''}</b>
 								</div>
 							</div>
-							<div className={'flex flex-col py-2 px-4 w-full h-24 md:py-4 md:px-6 md:h-32 rounded-default bg-neutral-200'}>
+							<div className={'rounded-default flex h-24 w-full flex-col bg-neutral-200 py-2 px-4 md:h-32 md:py-4 md:px-6'}>
 								<Input.BigNumber
 									balance={utils.format.toNormalizedAmount(shareOfVault, currentVault?.decimals)}
 									price={utils.format.toNormalizedValue(priceOfToken, 6) * utils.format.toNormalizedValue(priceOfVault, currentVault?.decimals || 18)}
@@ -265,9 +265,9 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 					<div className={'my-4 md:mt-6'}>
 						<b className={'text-neutral-700'}>{'Receive'}</b>
 						<div className={'mt-1'}>
-							<dl className={'space-y-2 w-full'}>
-								<div className={'flex overflow-hidden relative flex-row justify-between items-center w-full'}>
-									<dt className={'pr-2 whitespace-nowrap text-typo-secondary'}>
+							<dl className={'w-full space-y-2'}>
+								<div className={'relative flex w-full flex-row items-center justify-between overflow-hidden'}>
+									<dt className={'text-typo-secondary whitespace-nowrap pr-2'}>
 										{currentVault?.token?.symbol}
 									</dt>
 									<dd className={'w-full font-bold'}>
@@ -275,21 +275,21 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 											<Line className={'text-typo-secondary'}/>
 										</div>
 										<div className={'flex justify-end'}>
-											<p className={'z-10 pl-2 text-right bg-neutral-0 text-typo-secondary'}>
+											<p className={'text-typo-secondary z-10 bg-neutral-0 pl-2 text-right'}>
 												{utils.format.amount(getWithdrawReceiveTokens(), 2, 6)}
 											</p>
 										</div>
 									</dd>
 								</div>
 
-								<div className={'flex overflow-hidden relative flex-row justify-between items-center w-full'}>
-									<dt className={'pr-2 whitespace-nowrap text-typo-secondary'}>{'USD Value'}</dt>
+								<div className={'relative flex w-full flex-row items-center justify-between overflow-hidden'}>
+									<dt className={'text-typo-secondary whitespace-nowrap pr-2'}>{'USD Value'}</dt>
 									<dd className={'w-full font-bold'}>
 										<div className={'absolute bottom-1.5 w-full'}>
 											<Line className={'text-typo-secondary'}/>
 										</div>
 										<div className={'flex justify-end'}>
-											<p className={'z-10 pl-2 text-right bg-neutral-0 text-typo-secondary'}>
+											<p className={'text-typo-secondary z-10 bg-neutral-0 pl-2 text-right'}>
 												{`$ ${utils.format.amount(getWithdrawReceiveValue(), 2, 2)}`}
 											</p>
 										</div>
@@ -302,18 +302,18 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 			);
 		}
 		return (
-			<div className={'grid grid-cols-1 gap-2 mt-2 md:grid-cols-1'}>
+			<div className={'mt-2 grid grid-cols-1 gap-2 md:grid-cols-1'}>
 				<div>
-					<div className={'flex flex-row ml-[-3px] space-x-2'}>
-						<div className={'aspect-square flex flex-col justify-center items-center w-24 h-24 md:w-32 md:h-32 rounded-default min-w-24 bg-neutral-200 md:min-w-32'}>
-							<div className={'w-8 h-8 md:w-12 md:h-12'}>
+					<div className={'ml-[-3px] flex flex-row space-x-2'}>
+						<div className={'rounded-default min-w-24 md:min-w-32 flex aspect-square h-24 w-24 flex-col items-center justify-center bg-neutral-200 md:h-32 md:w-32'}>
+							<div className={'h-8 w-8 md:h-12 md:w-12'}>
 								<Image width={48} height={48} src={currentVault?.token?.icon} />
 							</div>
-							<div className={'px-1 mt-2 text-sm text-center md:px-2 md:mt-4 md:text-base'}>
+							<div className={'mt-2 px-1 text-center text-sm md:mt-4 md:px-2 md:text-base'}>
 								<b>{currentVault?.token?.symbol || ''}</b>
 							</div>
 						</div>
-						<div className={'flex flex-col py-2 px-4 w-full h-24 md:py-4 md:px-6 md:h-32 rounded-default bg-neutral-200'}>
+						<div className={'rounded-default flex h-24 w-full flex-col bg-neutral-200 py-2 px-4 md:h-32 md:py-4 md:px-6'}>
 							<Input.BigNumber
 								balance={utils.format.toNormalizedAmount(balanceOfToken, currentVault?.decimals)}
 								price={utils.format.toNormalizedValue(priceOfToken, 6)}
@@ -327,29 +327,29 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 				<div className={'my-4 md:mt-6'}>
 					<b className={'text-neutral-700'}>{'Receive'}</b>
 					<div className={'mt-1'}>
-						<dl className={'space-y-2 w-full'}>
-							<div className={'flex overflow-hidden relative flex-row justify-between items-center w-full'}>
-								<dt className={'pr-2 whitespace-nowrap text-typo-secondary'}>{currentVault.symbol}</dt>
+						<dl className={'w-full space-y-2'}>
+							<div className={'relative flex w-full flex-row items-center justify-between overflow-hidden'}>
+								<dt className={'text-typo-secondary whitespace-nowrap pr-2'}>{currentVault.symbol}</dt>
 								<dd className={'w-full font-bold'}>
 									<div className={'absolute bottom-1.5 w-full'}>
 										<Line className={'text-typo-secondary'}/>
 									</div>
 									<div className={'flex justify-end'}>
-										<p className={'z-10 pl-2 text-right bg-neutral-0 text-typo-secondary'}>
+										<p className={'text-typo-secondary z-10 bg-neutral-0 pl-2 text-right'}>
 											{utils.format.amount(getDepositReceiveTokens(), 2, 6)}
 										</p>
 									</div>
 								</dd>
 							</div>
 
-							<div className={'flex overflow-hidden relative flex-row justify-between items-center w-full'}>
-								<dt className={'pr-2 whitespace-nowrap text-typo-secondary'}>{'USD Value'}</dt>
+							<div className={'relative flex w-full flex-row items-center justify-between overflow-hidden'}>
+								<dt className={'text-typo-secondary whitespace-nowrap pr-2'}>{'USD Value'}</dt>
 								<dd className={'w-full font-bold'}>
 									<div className={'absolute bottom-1.5 w-full'}>
 										<Line className={'text-typo-secondary'}/>
 									</div>
 									<div className={'flex justify-end'}>
-										<p className={'z-10 pl-2 text-right bg-neutral-0 text-typo-secondary'}>
+										<p className={'text-typo-secondary z-10 bg-neutral-0 pl-2 text-right'}>
 											{`$ ${utils.format.amount(getDepositReceiveValue(), 2, 2)}`}
 										</p>
 									</div>
@@ -368,7 +368,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	function	renderButtons(): ReactNode {
 		if (actionType === 'withdraw') {
 			return (
-				<div className={'grid grid-cols-1 gap-2 px-4 pb-4 mt-4 md:px-6 md:pb-6'}>
+				<div className={'mt-4 grid grid-cols-1 gap-2 px-4 pb-4 md:px-6 md:pb-6'}>
 					<Button
 						variant={'light'}
 						className={'h-12'}
@@ -385,7 +385,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 			);
 		}
 		return (
-			<div className={'grid grid-cols-2 gap-2 px-4 pb-4 mt-4 md:px-6 md:pb-6'}>
+			<div className={'mt-4 grid grid-cols-2 gap-2 px-4 pb-4 md:px-6 md:pb-6'}>
 				<Button
 					variant={'light'}
 					className={'h-12'}
@@ -421,17 +421,17 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	**************************************************************************/
 	return(
 		<div>
-			<div className={'px-4 my-4 md:px-6 md:my-6'}>
-				<span className={'inline-flex items-baseline mb-4 space-x-2'}>
+			<div className={'my-4 px-4 md:my-6 md:px-6'}>
+				<span className={'mb-4 inline-flex items-baseline space-x-2'}>
 					<p
 						onClick={(): void => set_actionType('deposit')}
-						className={`cursor-pointer ${actionType === 'deposit' ? 'font-bold text-neutral-700 text-base' : 'text-sm text-neutral-700/60 hover:text-neutral-700'}`}>
+						className={`cursor-pointer ${actionType === 'deposit' ? 'text-base font-bold text-neutral-700' : 'text-sm text-neutral-700/60 hover:text-neutral-700'}`}>
 						{'Deposit'}
 					</p>
 					<p className={'text-sm text-neutral-700/60'}>{' / '}</p>
 					<p
 						onClick={(): void => set_actionType('withdraw')}
-						className={`cursor-pointer ${actionType === 'withdraw' ? 'font-bold text-neutral-700 text-base' : 'text-sm text-neutral-700/60 hover:text-neutral-700'}`}>
+						className={`cursor-pointer ${actionType === 'withdraw' ? 'text-base font-bold text-neutral-700' : 'text-sm text-neutral-700/60 hover:text-neutral-700'}`}>
 						{'Withdraw'}
 					</p>
 				</span>

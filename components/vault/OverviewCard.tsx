@@ -61,14 +61,14 @@ function	OverviewCard({currentVault, address}: {currentVault?: TVault, address: 
 	**************************************************************************/
 	return (
 		<Card className={'col-span-1 md:col-span-3'}>
-			<div className={'flex flex-row items-start mb-6 space-x-6'}>
+			<div className={'mb-6 flex flex-row items-start space-x-6'}>
 				{currentVault?.token?.icon ? <Image
 					src={currentVault?.token?.icon || ''}
 					width={80}
 					height={80}
-					className={'min-w-[80px]'} /> : <div className={'w-[80px] h-[80px] rounded-full bg-neutral-0'} />}
+					className={'min-w-[80px]'} /> : <div className={'h-[80px] w-[80px] rounded-full bg-neutral-0'} />}
 				<div>
-					<h2 className={'-mt-1 -mb-2 text-xl font-bold md:text-5xl text-neutral-700'}>
+					<h2 className={'-mt-1 -mb-2 text-xl font-bold text-neutral-700 md:text-5xl'}>
 						{currentVault?.name || ''}
 					</h2>
 					<AddressWithActions
