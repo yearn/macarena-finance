@@ -177,7 +177,7 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 	** While the chartjs-plugin-zoom plugin is not loaded, skip the render.
 	**********************************************************************/
 	if (!isInit) {
-		return <Card className={'overflow-hidden col-span-1 w-full max-w-full md:col-span-2'} padding={'none'} />;
+		return <Card className={'col-span-1 w-full max-w-full overflow-hidden md:col-span-2'} padding={'none'} />;
 	}
 
 	/* 🔵 - Yearn Finance **************************************************
@@ -185,28 +185,28 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 	**********************************************************************/
 	const	growth = getTimePeriodGrowth(currentData);
 	return (
-		<Card className={'overflow-hidden col-span-1 w-full max-w-full md:col-span-2'} padding={'none'}>
-			<div className={'flex relative flex-col justify-end items-center -mx-0.5 h-full'}>
-				<div className={'flex absolute top-4 flex-row justify-between items-center px-4 w-full'}>
+		<Card className={'col-span-1 w-full max-w-full overflow-hidden md:col-span-2'} padding={'none'}>
+			<div className={'relative -mx-0.5 flex h-full flex-col items-center justify-end'}>
+				<div className={'absolute top-4 flex w-full flex-row items-center justify-between px-4'}>
 					<div className={'grid grid-cols-4 gap-2'}>
 						<div
 							onClick={(): void => set_currentData(data7d)}
-							className={`py-1 px-2 text-xs rounded-default cursor-pointer border ${currentData.length === 7 ? 'bg-accent-500 text-neutral-100 border-black' : 'text-neutral-500/70 border-neutral-500/70'}`}>
+							className={`rounded-default cursor-pointer border py-1 px-2 text-xs ${currentData.length === 7 ? 'border-black bg-accent-500 text-neutral-100' : 'border-neutral-500/70 text-neutral-500/70'}`}>
 							{'7 days'}
 						</div>
 						<div
 							onClick={(): void => set_currentData(data14d)}
-							className={`py-1 px-2 text-xs rounded-default cursor-pointer border ${currentData.length === 14 ? 'bg-accent-500 text-neutral-100 border-black' : 'text-neutral-500/70 border-neutral-500/70'}`}>
+							className={`rounded-default cursor-pointer border py-1 px-2 text-xs ${currentData.length === 14 ? 'border-black bg-accent-500 text-neutral-100' : 'border-neutral-500/70 text-neutral-500/70'}`}>
 							{'14 days'}
 						</div>
 						<div
 							onClick={(): void => set_currentData(data30d)}
-							className={`py-1 px-2 text-xs rounded-default cursor-pointer border ${currentData.length == 30 ? 'bg-accent-500 text-neutral-100 border-black' : 'text-neutral-500/70 border-neutral-500/70'}`}>
+							className={`rounded-default cursor-pointer border py-1 px-2 text-xs ${currentData.length == 30 ? 'border-black bg-accent-500 text-neutral-100' : 'border-neutral-500/70 text-neutral-500/70'}`}>
 							{'30 days'}
 						</div>
 						<div
 							onClick={(): void => set_currentData(data365d)}
-							className={`py-1 px-2 text-xs rounded-default cursor-pointer border ${currentData.length > 30 ? 'bg-accent-500 text-neutral-100 border-black' : 'text-neutral-500/70 border-neutral-500/70'}`}>
+							className={`rounded-default cursor-pointer border py-1 px-2 text-xs ${currentData.length > 30 ? 'border-black bg-accent-500 text-neutral-100' : 'border-neutral-500/70 text-neutral-500/70'}`}>
 							{'365 days'}
 						</div>
 					</div>
@@ -216,7 +216,7 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 						</b>
 					</div>
 				</div>
-				<div className={'absolute top-16 text-xs text-center opacity-50'}>
+				<div className={'absolute top-16 text-center text-xs opacity-50'}>
 					{timeoutGrowth?.minTime && timeoutGrowth?.maxTime && (timeoutGrowth.growth.toFixed(2) + '% annualised growth from ' + timeoutGrowth.minTime + ' to ' + timeoutGrowth.maxTime)}
 				</div>
 				<Line

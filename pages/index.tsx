@@ -21,9 +21,9 @@ function	VaultCard({currentVault}: {currentVault: TVault}): ReactElement {
 					<motion.div initial={'rest'} whileHover={'hover'} animate={'rest'} className={'cursor-pointer'}>
 						<motion.div
 							variants={slashMotion}
-							className={'flex flex-col justify-between items-start p-6 pb-4 macarena--vaultCard'}>
-							<div className={'flex flex-row justify-between items-start w-full'}>
-								<div className={'min-w-[32px] min-h-[32px] md:min-w-[80px] md:min-h-[80px]'}>
+							className={'macarena--vaultCard flex flex-col items-start justify-between p-6 pb-4'}>
+							<div className={'flex w-full flex-row items-start justify-between'}>
+								<div className={'min-h-[32px] min-w-[32px] md:min-h-[80px] md:min-w-[80px]'}>
 									<Image
 										src={currentVault.token.icon}
 										width={80}
@@ -35,13 +35,13 @@ function	VaultCard({currentVault}: {currentVault: TVault}): ReactElement {
 								</div>
 							</div>
 							<div>
-								<h2 className={'mt-1 text-lg font-bold md:text-5xl text-neutral-700'}>
+								<h2 className={'mt-1 text-lg font-bold text-neutral-700 md:text-5xl'}>
 									{currentVault.token.display_name || currentVault.token.name}
 								</h2>
 							</div>
 						</motion.div>
 
-						<div className={'p-4 space-y-6 md:p-6'}>
+						<div className={'space-y-6 p-4 md:p-6'}>
 							<div>
 								<p className={'text-sm text-neutral-700'}>{'TVL'}</p>
 								<b className={'text-4xl'}>{`$${utils.format.amount(currentVault.tvl.tvl / 1000_000, 2, 2)}m`}</b>
@@ -49,7 +49,7 @@ function	VaultCard({currentVault}: {currentVault: TVault}): ReactElement {
 
 							<div>
 								<b className={'text-sm text-neutral-700'}>{'Annualized Growth'}</b>
-								<div className={'grid grid-cols-3 gap-4 mt-2'}>
+								<div className={'mt-2 grid grid-cols-3 gap-4'}>
 									<div className={'flex flex-col'}>
 										<p className={'text-xs text-neutral-700/70'}>{'Last 7 days'}</p>
 										<b className={'text-neutral-700'}>{`${utils.format.amount(currentVault.apy.points.week_ago * 100, 2, 2)}%`}</b>
@@ -116,7 +116,7 @@ function	Index(): ReactElement {
 	** Main render of the page.
 	**************************************************************************/
 	return (
-		<div className={'z-0 pb-10 w-full md:pb-20'}>
+		<div className={'z-0 w-full pb-10 md:pb-20'}>
 			<Filters
 				currentCategory={selectedCategory}
 				availableCategories={defaultCategories}

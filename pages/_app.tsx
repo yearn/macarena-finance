@@ -41,8 +41,8 @@ function	Header(): ReactElement {
 	const	[selectedOption, set_selectedOption] = React.useState(options[0]);
 	
 	React.useEffect((): void => {
-		if (!isActive) {
-			set_walletIdentity('Connect wallet');
+		if (!isActive && address) {
+			set_walletIdentity('Invalid network');
 		} else if (ens) {
 			set_walletIdentity(ens);
 		} else if (address) {
@@ -58,21 +58,21 @@ function	Header(): ReactElement {
 	}, [chainID, isActive]);
 
 	return (
-		<header className={'flex static inset-x-0 top-0 flex-row mb-5 w-full h-24 macarena--header bg-neutral-0'}>
-			<div className={'mx-auto w-full h-full rounded-sm bg-neutral-0'}>
-				<div className={'mx-auto w-full max-w-6xl h-full'}>
-					<div className={'grid grid-cols-3 justify-center w-full h-full'}>
-						<div aria-label={'search'} className={'hidden justify-start items-center md:flex'}>
+		<header className={'macarena--header static inset-x-0 top-0 mb-5 flex h-24 w-full flex-row bg-neutral-0'}>
+			<div className={'mx-auto h-full w-full rounded-sm bg-neutral-0'}>
+				<div className={'mx-auto h-full w-full max-w-6xl'}>
+					<div className={'grid h-full w-full grid-cols-3 justify-center'}>
+						<div aria-label={'search'} className={'hidden items-center justify-start md:flex'}>
 							<KBarButton />
 						</div>
-						<div aria-label={'logo'} className={'flex col-span-3 justify-center items-center md:col-span-1'}>
+						<div aria-label={'logo'} className={'col-span-3 flex items-center justify-center md:col-span-1'}>
 							<Link href={'/'}>
 								<div>
 									<LogoMacarena className={'cursor-pointer'} />
 								</div>
 							</Link>
 						</div>
-						<div aria-label={'wallet and network'} className={'hidden flex-row justify-end items-center space-x-4 md:flex'}>
+						<div aria-label={'wallet and network'} className={'hidden flex-row items-center justify-end space-x-4 md:flex'}>
 							<div className={'hidden flex-row items-center space-x-4 md:flex'}>
 								<Dropdown
 									defaultOption={options[0]}
@@ -82,13 +82,16 @@ function	Header(): ReactElement {
 							</div>
 							<button
 								onClick={(): void => {
-									if (isActive)
+									if (isActive) {
 										onDesactivate();
-									else
+									} else if (!isActive && address) {
+										onSwitchChain(1, true);
+									} else {
 										openLoginModal();
+									}
 								}}
 								data-variant={'light'}
-								className={'truncate yearn--button'}>
+								className={'yearn--button truncate'}>
 								{walletIdentity}
 							</button>
 						</div>
@@ -113,7 +116,7 @@ function	WithLayout(props: AppProps): ReactElement {
 	return (
 		<div id={'app'}>
 			<Header />
-			<div className={'flex flex-col mx-auto mb-0 w-full max-w-6xl'}>
+			<div className={'mx-auto mb-0 flex w-full max-w-6xl flex-col'}>
 				<AnimatePresence exitBeforeEnter onExitComplete={handleExitComplete}>
 					<motion.div
 						key={router.pathname}
@@ -169,7 +172,7 @@ function	AppWrapper(props: AppProps): ReactElement {
 		shortcut: ['g'],
 		keywords: 'github code',
 		section: 'Social',
-		icon: <SocialGithub className={'w-9 h-9'} />,
+		icon: <SocialGithub className={'h-9 w-9'} />,
 		perform: async (): Promise<unknown> => window.open('https://github.com/yearn', '_blank')
 	},
 	{
@@ -178,7 +181,7 @@ function	AppWrapper(props: AppProps): ReactElement {
 		shortcut: ['t'],
 		keywords: 'social contact dm',
 		section: 'Social',
-		icon: <SocialTwitter className={'w-9 h-9'} />,
+		icon: <SocialTwitter className={'h-9 w-9'} />,
 		perform: async (): Promise<unknown> => window.open('https://twitter.com/iearnfinance', '_blank')
 	},
 	{
@@ -187,7 +190,7 @@ function	AppWrapper(props: AppProps): ReactElement {
 		shortcut: ['d'],
 		keywords: 'discord',
 		section: 'Social',
-		icon: <SocialDiscord className={'w-9 h-9'} />,
+		icon: <SocialDiscord className={'h-9 w-9'} />,
 		perform: async (): Promise<unknown> => window.open('https://discord.yearn.finance', '_blank')
 	}];
 
@@ -215,6 +218,8 @@ function	MyApp(props: AppProps): ReactElement {
 					shouldUseThemes: false
 				},
 				web3: {
+					shouldUseWallets: true,
+					shouldUseStrictChainMode: false,
 					defaultChainID: 1,
 					supportedChainID: [1, 250, 1337]
 				}

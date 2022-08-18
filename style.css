@@ -17,7 +17,6 @@
 
 	--color-primary-100: 279 36% 34%;
 	--color-primary-200: 279 36% 32%;
-	/* --color-primary-200: 225 47% 41%; */
 	--color-primary-500: 49 100% 50%;
 	--color-primary-600: 49 100% 47%;
 	--color-accent-500: 49 100% 50%;
@@ -123,5 +122,20 @@
 			& > p {@apply text-neutral-100;}
 		}
 	}
-	
+
+	& .yearn--input-field {
+		width: 100%;
+		border-style: none;
+		background-color: rgb(255 255 255 / 0);
+		padding: 0px;
+		font-size: 24px;
+		line-height: 32px;
+		font-weight: 700;
+		outline: 2px solid transparent;
+		outline-offset: 2px;
+		@apply placeholder:text-white/20;
+	}
+	& .yearn--input-field:focus {
+		@apply ring-0;
+	}
 }
