@@ -5,7 +5,7 @@
 	"iconPath": "./favicons/apple-icon.png",
 	"locale": "en-US",
 	"uri": "https://macarena.finance/",
-	"og": "https://macarena.finance/og.jpeg",
+	"og": "https://macarena.finance/og.png",
 	"twitter": "@iearnfinance",
 	"github": "https://github.com/yearn/macarena-finance",
 	"icons": [
