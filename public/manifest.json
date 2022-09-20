@@ -2,7 +2,7 @@
 	"name": "Macarena Finance",
 	"short_name": "Macarena",
 	"description": "Macarena finance, a UI for Yearn Finance that you actually want to fork",
-	"iconPath": "./favicons/apple-icon.png",
+	"iconPath": "./favicons/favicon.svg",
 	"locale": "en-US",
 	"uri": "https://macarena.finance/",
 	"og": "https://macarena.finance/og.png",
