@@ -13,7 +13,7 @@
     "clean": "rm -rf .next && rm -rf node_modules"
   },
   "dependencies": {
-    "@yearn-finance/web-lib": "^0.13.5",
+    "@yearn-finance/web-lib": "^0.13.27",
     "axios": "^0.27.2",
     "chart.js": "^3.9.1",
     "chartjs-plugin-zoom": "^1.2.1",
