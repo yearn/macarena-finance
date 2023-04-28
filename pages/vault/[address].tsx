@@ -48,7 +48,7 @@ function	Vault(): ReactElement {
 					chainID={chainID} />
 			</div>
 			<div className={'mt-4 grid grid-cols-1 gap-4 md:grid-cols-5'}>
-				<div className={'col-span-1 md:col-span-3'}>
+				<div className={'yearn--card col-span-1 md:col-span-3'}>
 					<Card>
 						<div className={'mb-4'}>
 							<b>{'Strategies'}</b>
@@ -72,7 +72,7 @@ function	Vault(): ReactElement {
 					</Card>
 				</div>
 				<div className={'col-span-1 md:col-span-2'}>
-					<Card className={'w-full max-w-full overflow-hidden'} padding={'none'}>
+					<Card className={'yearn--card w-full max-w-full overflow-hidden'} padding={'none'}>
 						{currentVault && <DepositCard currentVault={currentVault} />}
 					</Card>
 				</div>

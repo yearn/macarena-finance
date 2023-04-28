@@ -67,7 +67,7 @@ function	OverviewCard({currentVault, address}: {currentVault?: TVault, address: 
 	** Main render of the page.
 	**************************************************************************/
 	return (
-		<Card className={'col-span-1 md:col-span-3'}>
+		<Card className={'yearn--card col-span-1 md:col-span-3'}>
 			<div className={'mb-6 flex flex-row items-start space-x-6'}>
 				{currentVault?.token?.icon ? <Image
 					src={currentVault?.token?.icon || ''}

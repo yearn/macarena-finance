@@ -178,7 +178,7 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 	** While the chartjs-plugin-zoom plugin is not loaded, skip the render.
 	**********************************************************************/
 	if (!isInit) {
-		return <Card className={'col-span-1 w-full max-w-full overflow-hidden md:col-span-2'} padding={'none'} />;
+		return <Card className={'yearn--card col-span-1 w-full max-w-full overflow-hidden md:col-span-2'} padding={'none'} />;
 	}
 
 	/* 🔵 - Yearn Finance **************************************************
@@ -186,7 +186,7 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 	**********************************************************************/
 	const	growth = getTimePeriodGrowth(currentData);
 	return (
-		<Card className={'col-span-1 w-full max-w-full overflow-hidden md:col-span-2'} padding={'none'}>
+		<Card className={'yearn--card col-span-1 w-full max-w-full overflow-hidden md:col-span-2'} padding={'none'}>
 			<div className={'relative -mx-0.5 flex h-full flex-col items-center justify-end'}>
 				<div className={'absolute top-4 flex w-full flex-row items-center justify-between px-4'}>
 					<div className={'grid grid-cols-4 gap-2'}>

@@ -20,7 +20,7 @@ function	VaultCard({currentVault}: {currentVault: TVault}): ReactElement {
 	return (
 		<div className={'w-full'}>
 			<Link href={`/vault/${currentVault.address}`}>
-				<Card className={'col-span-1 md:col-span-3'} padding={'none'}>
+				<Card className={'yearn--card col-span-1 md:col-span-3'} padding={'none'}>
 					<motion.div initial={'rest'} whileHover={'hover'} animate={'rest'} className={'cursor-pointer'}>
 						<motion.div
 							variants={slashMotion}

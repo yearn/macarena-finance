@@ -5,6 +5,11 @@
 	@apply font-mono;
 }
 
+body {@apply text-neutral-700;}
+h1 {@apply text-xl font-bold text-primary-500;}
+h4 {@apply text-lg font-bold text-neutral-700;}
+#__next {@apply w-full h-full}
+
 :root body[data-theme="macarena"] {
 	--default-rounded: 2px;
 	--color-neutral-0: 279 37% 17%;
@@ -25,8 +30,6 @@
 	@apply bg-neutral-200;
 
 	/* -- Dropdown.tsx ----------------------------------------------------- */
-	& .yearn--dropdown {
-	}
 	& .yearn--dropdown-menu {
 		--dropdown-text-color: hsl(var(--color-primary-500));
 		--dropdown-bg-color: hsl(var(--color-neutral-300));
@@ -75,7 +78,7 @@
 	& .yearn--card-tab-item {
 		--card-tab-color-active: hsl(var(--color-primary-500));
 		--card-tab-color: hsl(var(--color-neutral-400));
-		--card-bg-color: hsl(var(--color-neutral-300) / 0.5);
+		--card-bg-color: hsl(var(--color-neutral-200));
 
 		@apply w-full h-20 border-b-2 flex-center cursor-pointer;
 		&.selected {
@@ -93,7 +96,9 @@
 		}
 	}
 	& .yearn--card-tab {
-		@apply flex flex-row w-full !rounded-b-none;
+		@apply flex flex-row w-full;
+		border-bottom-left-radius: 0 !important;
+		border-bottom-right-radius: 0 !important;
 		& > .yearn--card-tab-item:first-child {
 			border-top-left-radius: var(--default-rounded);
 		}
@@ -105,10 +110,11 @@
 		@apply shadow-none transition-all;
 		border-radius: var(--default-rounded);
 		&[role="button"] {@apply cursor-pointer hover:bg-neutral-0 shadow-lg;}
-		&[data-variant="background"] {@apply bg-neutral-200;}
+		&[data-variant="background"] {@apply bg-neutral-100;}
 		&[data-variant="surface"] {@apply bg-neutral-0;}
 		&[data-padding="narrow"] {@apply p-2 md:p-4;}
 		&[data-padding="regular"] {@apply p-4 md:p-6;}
+		&[data-padding="relaxed"] {@apply p-8;}
 	}
 
 	& .yearn--searchBox-wrapper {
@@ -189,6 +195,37 @@
 			& > b {@apply mt-2 text-xl text-neutral-100;}
 			& > p {@apply text-neutral-100;}
 		}
+	}
+
+	/* -- ElementWithActions.tsx ------------------------------------------- */
+	& .yearn--elementWithActions-copy {
+		@apply cursor-copy px-1 md:px-2;
+	}
+	& .yearn--elementWithActions-linkout {
+		@apply cursor-alias;
+		& > a {@apply cursor-alias;}
+	}
+	& .yearn--elementWithActions-icon {
+		@apply w-4 h-4 transition-colors;
+		color: var(--elementWithActions-action-color);
+		&:hover {
+			color: var(--elementWithActions-action-color-hover);
+		}
+	}
+	& .yearn--elementWithActions {
+		@apply font-mono font-bold text-left;
+		color: var(--elementWithActions-text-color);
+		& ~ button {
+			@apply flex justify-center items-center p-0 w-8 h-8;
+			border-radius: var(--default-rounded);
+		}
+	}
+
+	& .yearn--elementWithActions-wrapper {
+		--elementWithActions-text-color: hsl(var(--color-neutral-700));
+		--elementWithActions-action-color: hsl(var(--color-primary-500));
+		--elementWithActions-action-color-hover: hsl(var(--color-primary-600));
+		@apply flex flex-row items-center;
 	}
 
 	/* -- Input.tsx -------------------------------------------------------- */
