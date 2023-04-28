@@ -1,15 +1,24 @@
-import	React, {ReactElement}				from	'react';
+import	React, {ReactElement, ReactNode}	from	'react';
 import	Link								from	'next/link';
 import	{useRouter}							from	'next/router';
-import	{AddressWithActions, Card}			from	'@yearn-finance/web-lib/components';
-import	{parseMarkdown, toAddress}			from	'@yearn-finance/web-lib/utils';
-import	{Chevron}							from	'@yearn-finance/web-lib/icons';
-import	{useWeb3}							from	'@yearn-finance/web-lib/contexts';
+import Chevron 								from 	'@yearn-finance/web-lib/icons/IconChevron';
+import {parseMarkdown} 						from 	'@yearn-finance/web-lib/utils/helpers';
 import	useYearn							from	'contexts/useYearn';
 import	DepositCard							from	'components/vault/DepositCard';
 import	OverviewCard						from	'components/vault/OverviewCard';
 import	ChartCard							from	'components/vault/ChartCard';
 import type {TVault}						from	'contexts/useYearn.d';
+import useWeb3 								from	'@yearn-finance/web-lib/contexts/useWeb3';
+import {toAddress} 							from	'@yearn-finance/web-lib/utils/address';
+
+// TODO
+function Card({children, className, padding}: {children: ReactNode; className?: string; padding?: string;}): ReactElement {
+	return (
+		<div className={className} style={{padding}}>
+			{children}
+		</div>
+	);
+}
 
 function	Vault(): ReactElement {
 	const	router = useRouter();
@@ -59,7 +68,7 @@ function	Vault(): ReactElement {
 											address={strategy.address}
 											className={'text-sm font-normal'} />
 										<p
-											className={'mt-4 text-xs line-clamp-4'}
+											className={'line-clamp-4 mt-4 text-xs'}
 											dangerouslySetInnerHTML={{__html: parseMarkdown((strategy?.description || '').replace(/{{token}}/g, currentVault.token.symbol) || '')}} />
 									
 									</div>

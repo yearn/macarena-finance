@@ -1,9 +1,15 @@
 import	React, {ReactElement, ReactNode}	from	'react';	
 import	Image								from	'next/image';
 import	{ethers}							from	'ethers';
-import	{Input, Button}						from	'@yearn-finance/web-lib/components';
-import	* as utils							from	'@yearn-finance/web-lib/utils';
-import	{useSettings, useWeb3}				from	'@yearn-finance/web-lib/contexts';
+import {formatAmount} 						from 	'@yearn-finance/web-lib/utils/format.number';
+import {useWeb3} 							from 	'@yearn-finance/web-lib/contexts/useWeb3';
+import performBatchedUpdates 				from 	'@yearn-finance/web-lib/utils/performBatchedUpdates';
+import {toAddress} 							from 	'@yearn-finance/web-lib/utils/address';
+import {toSafeAmount}						from 	'@yearn-finance/web-lib/utils/format';
+import {BN, formatUnits,
+	toNormalizedAmount, toNormalizedValue} 	from 	'@yearn-finance/web-lib/utils/format.bigNumber';
+import {Transaction, defaultTxStatus} 		from 	'@yearn-finance/web-lib/utils/web3/transaction';
+import useSettings 							from 	'@yearn-finance/web-lib/contexts/useSettings';
 import	Line								from	'components/icons/Line';
 import	{approveERC20}						from	'utils/actions/approveToken';
 import	{depositToken}						from	'utils/actions/depositToken';
@@ -16,7 +22,7 @@ import type {TVault}						from	'contexts/useYearn.d';
 ** or withdraw and perform the actual web3 action. It will use the user's info
 ** (provider, address) from the web-lib, it's wallet info from the useWallet
 ** context and will init a bunch of state variables to controle the flow. 
-** The utils.Transaction flow is used to perform the transactions.
+** The Transaction flow is used to perform the transactions.
 ******************************************************************************/
 function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	const	{chainID, isActive, address, provider} = useWeb3();
@@ -29,9 +35,9 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	const	[allowanceForToken, set_allowanceForToken] = React.useState(ethers.constants.Zero);
 	const	[priceOfToken, set_priceOfToken] = React.useState(ethers.constants.Zero);
 	const	[priceOfVault, set_priceOfVault] = React.useState(ethers.constants.One);
-	const	[txStatusApprove, set_txStatusApprove] = React.useState(utils.defaultTxStatus);
-	const	[txStatusDeposit, set_txStatusDeposit] = React.useState(utils.defaultTxStatus);
-	const	[txStatusWithdraw, set_txStatusWithdraw] = React.useState(utils.defaultTxStatus);
+	const	[txStatusApprove, set_txStatusApprove] = React.useState(defaultTxStatus);
+	const	[txStatusDeposit, set_txStatusDeposit] = React.useState(defaultTxStatus);
+	const	[txStatusWithdraw, set_txStatusWithdraw] = React.useState(defaultTxStatus);
 
 	/* 🔵 - Yearn Finance ******************************************************
 	** This useEffect trigget the set and reset of the local state. A simple
@@ -47,28 +53,28 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	**************************************************************************/
 	React.useEffect((): void => {
 		if (currentVault) {
-			utils.performBatchedUpdates((): void => {
-				set_shareOfVault(utils.format.BN(balances[utils.toAddress(currentVault.address)]?.raw));
-				set_balanceOfToken(utils.format.BN(balances[utils.toAddress(currentVault.token.address)]?.raw));
-				set_allowanceForToken(utils.format.BN(allowances[utils.toAddress(currentVault.token.address)]?.raw));
+			performBatchedUpdates((): void => {
+				set_shareOfVault(BN(balances[toAddress(currentVault.address)]?.raw));
+				set_balanceOfToken(BN(balances[toAddress(currentVault.token.address)]?.raw));
+				set_allowanceForToken(BN(allowances[toAddress(currentVault.token.address)]?.raw));
 				if (actionType === 'deposit') {
 					set_amount((previousAmount): string => (
 						previousAmount === ''
-							? (balances[utils.toAddress(currentVault.token.address)]?.normalized || '').toString()
+							? (balances[toAddress(currentVault.token.address)]?.normalized || '').toString()
 							: previousAmount
 					));
 				} else {
 					set_amount((previousAmount): string => (
 						previousAmount === ''
-							? (balances[utils.toAddress(currentVault.address)]?.normalized || '').toString()
+							? (balances[toAddress(currentVault.address)]?.normalized || '').toString()
 							: previousAmount
 					));
 				}
-				set_priceOfToken(utils.format.BN(prices[utils.toAddress(currentVault.token.address)]?.raw));
-				set_priceOfVault(utils.format.BN(prices[utils.toAddress(currentVault.address)]?.raw));
+				set_priceOfToken(BN(prices[toAddress(currentVault.token.address)]?.raw));
+				set_priceOfVault(BN(prices[toAddress(currentVault.address)]?.raw));
 			});
 		} else {
-			utils.performBatchedUpdates((): void => {
+			performBatchedUpdates((): void => {
 				set_shareOfVault(ethers.constants.Zero);
 				set_balanceOfToken(ethers.constants.Zero);
 				set_allowanceForToken(ethers.constants.Zero);
@@ -93,13 +99,13 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 		if (!isActive || txStatusApprove.pending)
 			return;
 		const	transaction = (
-			new utils.Transaction(provider, approveERC20, set_txStatusApprove).populate(
+			new Transaction(provider, approveERC20, set_txStatusApprove).populate(
 				currentVault.token.address,
 				networks[chainID === 1337 ? 1 : chainID  || 1].partnerContractAddress,
-				utils.format.toSafeAmount(amount, balances[utils.toAddress(currentVault.token.address)].raw)
+				toSafeAmount(amount, balances[toAddress(currentVault.token.address)].raw)
 			).onSuccess(async (): Promise<void> => {
 				await updateVaultData(currentVault);
-				set_allowanceForToken(allowances[utils.toAddress(currentVault.token.address)].raw);
+				set_allowanceForToken(allowances[toAddress(currentVault.token.address)].raw);
 			})
 		);
 
@@ -120,16 +126,16 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 		if (!isActive || txStatusDeposit.pending)
 			return;
 		const	transaction = (
-			new utils.Transaction(provider, depositToken, set_txStatusDeposit).populate(
+			new Transaction(provider, depositToken, set_txStatusDeposit).populate(
 				networks[chainID === 1337 ? 1 : chainID  || 1].partnerContractAddress,
 				currentVault.address,
-				utils.format.toSafeAmount(amount, balances[utils.toAddress(currentVault.token.address)].raw)
+				toSafeAmount(amount, balances[toAddress(currentVault.token.address)].raw)
 			).onSuccess(async (): Promise<void> => {
 				await updateVaultData(currentVault);
-				utils.performBatchedUpdates((): void => {
-					set_shareOfVault(balances[utils.toAddress(currentVault.address)].raw);
-					set_balanceOfToken(balances[utils.toAddress(currentVault.token.address)].raw);
-					set_allowanceForToken(allowances[utils.toAddress(currentVault.token.address)].raw);
+				performBatchedUpdates((): void => {
+					set_shareOfVault(balances[toAddress(currentVault.address)].raw);
+					set_balanceOfToken(balances[toAddress(currentVault.token.address)].raw);
+					set_allowanceForToken(allowances[toAddress(currentVault.token.address)].raw);
 				});
 			})
 		);
@@ -154,14 +160,14 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 		if (!isActive || txStatusDeposit.pending)
 			return;
 		const	transaction = (
-			new utils.Transaction(provider, withdrawShare, set_txStatusWithdraw).populate(
+			new Transaction(provider, withdrawShare, set_txStatusWithdraw).populate(
 				currentVault.address,
-				utils.format.toSafeAmount(amount, balances[utils.toAddress(currentVault.token.address)].raw)
+				toSafeAmount(amount, balances[toAddress(currentVault.token.address)].raw)
 			).onSuccess(async (): Promise<void> => {
 				await updateVaultData(currentVault);
-				utils.performBatchedUpdates((): void => {
-					set_shareOfVault(balances[utils.toAddress(currentVault.address)].raw);
-					set_balanceOfToken(balances[utils.toAddress(currentVault.token.address)].raw);
+				performBatchedUpdates((): void => {
+					set_shareOfVault(balances[toAddress(currentVault.address)].raw);
+					set_balanceOfToken(balances[toAddress(currentVault.token.address)].raw);
 				});
 			})
 		);
@@ -179,7 +185,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	**************************************************************************/
 	const	getWithdrawReceiveTokens = React.useCallback((): number => {
 		const	_amount = Number(amount || 0);
-		const	_priceOfVault = utils.format.toNormalizedValue(priceOfVault, currentVault?.decimals || 18);
+		const	_priceOfVault = toNormalizedValue(priceOfVault, currentVault?.decimals || 18);
 		const	_price = _priceOfVault;
 		if (_price === 0) {
 			return 0;
@@ -195,7 +201,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	**************************************************************************/
 	const	getWithdrawReceiveValue = React.useCallback((): number => {
 		const	_amount = getWithdrawReceiveTokens();
-		const	_priceOfToken = utils.format.toNormalizedValue(priceOfToken, 6);
+		const	_priceOfToken = toNormalizedValue(priceOfToken, 6);
 		const	_price = _priceOfToken;
 		if (_price === 0) {
 			return 0;
@@ -210,7 +216,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	**************************************************************************/
 	const	getDepositReceiveTokens = React.useCallback((): number => {
 		const	_amount = Number(amount || 0);
-		const	_priceOfVault = utils.format.toNormalizedValue(priceOfVault, currentVault?.decimals || 18);
+		const	_priceOfVault = toNormalizedValue(priceOfVault, currentVault?.decimals || 18);
 		if (_priceOfVault === 0) {
 			return 0;
 		}
@@ -225,8 +231,8 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	**************************************************************************/
 	const	getDepositReceiveValue = React.useCallback((): number => {
 		const	_amount = getDepositReceiveTokens();
-		const	_priceOfVault = utils.format.toNormalizedValue(priceOfVault, currentVault?.decimals || 18);
-		const	_priceOfToken = (utils.format.toNormalizedValue(priceOfToken, 6));
+		const	_priceOfVault = toNormalizedValue(priceOfVault, currentVault?.decimals || 18);
+		const	_priceOfToken = (toNormalizedValue(priceOfToken, 6));
 		const	_price = _priceOfToken * _priceOfVault;
 		if (_price === 0) {
 			return 0;
@@ -253,8 +259,8 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 							</div>
 							<div className={'rounded-default flex h-24 w-full flex-col bg-neutral-200 py-2 px-4 md:h-32 md:py-4 md:px-6'}>
 								<Input.BigNumber
-									balance={utils.format.toNormalizedAmount(shareOfVault, currentVault?.decimals)}
-									price={utils.format.toNormalizedValue(priceOfToken, 6) * utils.format.toNormalizedValue(priceOfVault, currentVault?.decimals || 18)}
+									balance={toNormalizedAmount(shareOfVault, currentVault?.decimals)}
+									price={toNormalizedValue(priceOfToken, 6) * toNormalizedValue(priceOfVault, currentVault?.decimals || 18)}
 									value={amount}
 									onSetValue={(s: string): void => set_amount(s)}
 									maxValue={shareOfVault}
@@ -276,7 +282,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 										</div>
 										<div className={'flex justify-end'}>
 											<p className={'text-typo-secondary z-10 bg-neutral-0 pl-2 text-right'}>
-												{utils.format.amount(getWithdrawReceiveTokens(), 2, 6)}
+												{formatAmount(getWithdrawReceiveTokens(), 2, 6)}
 											</p>
 										</div>
 									</dd>
@@ -290,7 +296,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 										</div>
 										<div className={'flex justify-end'}>
 											<p className={'text-typo-secondary z-10 bg-neutral-0 pl-2 text-right'}>
-												{`$ ${utils.format.amount(getWithdrawReceiveValue(), 2, 2)}`}
+												{`$ ${formatAmount(getWithdrawReceiveValue(), 2, 2)}`}
 											</p>
 										</div>
 									</dd>
@@ -315,8 +321,8 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 						</div>
 						<div className={'rounded-default flex h-24 w-full flex-col overflow-hidden bg-neutral-200 py-2 px-4 md:h-32 md:py-4 md:px-6'}>
 							<Input.BigNumber
-								balance={utils.format.toNormalizedAmount(balanceOfToken, currentVault?.decimals)}
-								price={utils.format.toNormalizedValue(priceOfToken, 6)}
+								balance={toNormalizedAmount(balanceOfToken, currentVault?.decimals)}
+								price={toNormalizedValue(priceOfToken, 6)}
 								value={amount}
 								onSetValue={(s: string): void => set_amount(s)}
 								maxValue={balanceOfToken}
@@ -336,7 +342,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 									</div>
 									<div className={'flex justify-end'}>
 										<p className={'text-typo-secondary z-10 bg-neutral-0 pl-2 text-right'}>
-											{utils.format.amount(getDepositReceiveTokens(), 2, 6)}
+											{formatAmount(getDepositReceiveTokens(), 2, 6)}
 										</p>
 									</div>
 								</dd>
@@ -350,7 +356,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 									</div>
 									<div className={'flex justify-end'}>
 										<p className={'text-typo-secondary z-10 bg-neutral-0 pl-2 text-right'}>
-											{`$ ${utils.format.amount(getDepositReceiveValue(), 2, 2)}`}
+											{`$ ${formatAmount(getDepositReceiveValue(), 2, 2)}`}
 										</p>
 									</div>
 								</dd>
@@ -377,7 +383,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 						isDisabled={
 							!isActive
 							|| amount === '' || Number(amount) === 0 
-							|| Number(amount) > Number(utils.format.units(shareOfVault || 0, 18))
+							|| Number(amount) > Number(formatUnits(shareOfVault || 0, 18))
 						}>
 						{txStatusWithdraw.error ? 'Failed' : txStatusWithdraw.success ? 'Withdrawn!' : 'Withdraw'}
 					</Button>
@@ -394,8 +400,8 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 					isDisabled={
 						!isActive
 						|| amount === '' || Number(amount) === 0 
-						|| Number(amount) > Number(utils.format.units(balanceOfToken || 0, 18))
-						|| Number(amount) <= Number(utils.format.units(allowanceForToken || 0, currentVault?.token?.decimals || 18))
+						|| Number(amount) > Number(formatUnits(balanceOfToken || 0, 18))
+						|| Number(amount) <= Number(formatUnits(allowanceForToken || 0, currentVault?.token?.decimals || 18))
 					}>
 					{txStatusApprove.error ? 'Failed' : txStatusApprove.success ? 'Approved!' : 'Approve'}
 				</Button>
@@ -407,8 +413,8 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 					isDisabled={
 						!isActive
 						|| amount === '' || Number(amount) === 0 
-						|| Number(amount) > Number(utils.format.units(balanceOfToken || 0, 18))
-						|| Number(amount) > Number(utils.format.units(allowanceForToken || 0, currentVault?.token?.decimals || 18))
+						|| Number(amount) > Number(formatUnits(balanceOfToken || 0, 18))
+						|| Number(amount) > Number(formatUnits(allowanceForToken || 0, currentVault?.token?.decimals || 18))
 					}>
 					{txStatusDeposit.error ? 'Failed' : txStatusDeposit.success ? 'Deposited!' : 'Deposit'}
 				</Button>

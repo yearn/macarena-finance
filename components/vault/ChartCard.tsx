@@ -1,14 +1,23 @@
-import	React, {ReactElement}		from	'react';
-import	useSWR						from	'swr';
-import	{request}					from	'graphql-request';
-import	{Line}						from	'react-chartjs-2';
+import	React, {ReactElement, ReactNode}		from	'react';
+import	useSWR									from	'swr';
+import	{request}								from	'graphql-request';
+import	{Line}									from	'react-chartjs-2';
 import	{Chart, Filler, Tooltip,
 	CategoryScale, PointElement,
-	LinearScale, LineElement}		from	'chart.js';
-import	{Card}						from	'@yearn-finance/web-lib/components';
-import	{format}					from	'@yearn-finance/web-lib/utils';
-import	{useSettings}				from	'@yearn-finance/web-lib/contexts';
-import	{useClientEffect}			from	'@yearn-finance/web-lib/hooks';
+	LinearScale, LineElement}					from	'chart.js';
+import {formatDate}								from 	'@yearn-finance/web-lib/utils/format';
+import {toNormalizedValue} 						from 	'@yearn-finance/web-lib/utils/format.bigNumber';
+import useSettings 								from 	'@yearn-finance/web-lib/contexts/useSettings';
+import {useClientEffect} 						from '@yearn-finance/web-lib/hooks/useClientEffect';
+
+// TODO
+function Card({children, className, padding}: {children?: ReactNode; className?: string; padding?: string;}): ReactElement {
+	return (
+		<div className={className} style={{padding}}>
+			{children}
+		</div>
+	);
+}
 
 /* 🔵 - Yearn Finance **********************************************************
 ** Simple formula ((final value - initial value) / (initial value)) to get the
@@ -56,30 +65,30 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 	**********************************************************************/
 	const	data365d = React.useMemo((): TChartDataSet[] => (
 		data.map((e: TVaultDayData): TChartDataSet => ({
-			label: format.date(Number(e.timestamp)),
+			label: formatDate(Number(e.timestamp)),
 			timestamp: Number(e.timestamp),
-			value: format.toNormalizedValue(e.pricePerShare, 18)
+			value: toNormalizedValue(e.pricePerShare, 18)
 		}))
 	), [data]);
 	const	data30d = React.useMemo((): TChartDataSet[] => (
 		data.slice(-30).map((e: TVaultDayData): TChartDataSet => ({
-			label: format.date(Number(e.timestamp)),
+			label: formatDate(Number(e.timestamp)),
 			timestamp: Number(e.timestamp),
-			value: format.toNormalizedValue(e.pricePerShare, 18)
+			value: toNormalizedValue(e.pricePerShare, 18)
 		}))
 	), [data]);
 	const	data14d = React.useMemo((): TChartDataSet[] => (
 		data.slice(-14).map((e: TVaultDayData): TChartDataSet => ({
-			label: format.date(Number(e.timestamp)),
+			label: formatDate(Number(e.timestamp)),
 			timestamp: Number(e.timestamp),
-			value: format.toNormalizedValue(e.pricePerShare, 18)
+			value: toNormalizedValue(e.pricePerShare, 18)
 		}))
 	), [data]);
 	const	data7d = React.useMemo((): TChartDataSet[] => (
 		data.slice(-7).map((e: TVaultDayData): TChartDataSet => ({
-			label: format.date(Number(e.timestamp)),
+			label: formatDate(Number(e.timestamp)),
 			timestamp: Number(e.timestamp),
-			value: format.toNormalizedValue(e.pricePerShare, 18)
+			value: toNormalizedValue(e.pricePerShare, 18)
 		}))
 	), [data]);
 	const	[currentData, set_currentData] = React.useState(data30d);
@@ -97,7 +106,7 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 					pricePerShare
 				}
 			}
-		}` : null, (query: string): any => request(networks[chainID === 1337 ? 1 : chainID  || 1].graphURI, query)
+		}` : null, (query: string): any => request(networks[chainID === 1337 ? 1 : chainID  || 1].graphURI!, query)
 	);
 
 	/* 🔵 - Yearn Finance **************************************************

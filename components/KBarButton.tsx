@@ -1,5 +1,5 @@
 import	React, {ReactElement}	from 'react';
-import	{Search}				from '@yearn-finance/web-lib/icons';
+import	Search					from '@yearn-finance/web-lib/icons/IconSearch';
 import	{useKBar}				from 'kbar';
 
 /* 🔵 - Yearn Finance ******************************************************

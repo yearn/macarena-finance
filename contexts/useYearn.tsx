@@ -1,8 +1,10 @@
 import	React, {ReactElement, useContext, createContext}	from	'react';
 import	axios												from	'axios';
 import	NProgress											from	'nprogress';
-import	{useSettings, useWeb3}								from	'@yearn-finance/web-lib/contexts';
-import	{performBatchedUpdates, toAddress}					from	'@yearn-finance/web-lib/utils';
+import performBatchedUpdates 								from 	'@yearn-finance/web-lib/utils/performBatchedUpdates';
+import {useSettings} 										from 	'@yearn-finance/web-lib/contexts/useSettings';
+import {toAddress} 											from 	'@yearn-finance/web-lib/utils/address';
+import {useWeb3} 											from 	'@yearn-finance/web-lib/contexts/useWeb3';
 import	{WalletContextApp}									from	'contexts/useWallet';
 import type {TToken, TVault, TVaultAPI}						from	'contexts/useYearn.d';
 
