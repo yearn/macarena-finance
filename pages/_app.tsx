@@ -59,7 +59,7 @@ function	Header(): ReactElement {
 	React.useEffect((): void => {
 		const	_selectedOption = options.find((e): boolean => e.value === Number(chainID)) || options[0];
 		set_selectedOption(_selectedOption);
-	}, [chainID, isActive, options]);
+	}, [chainID, isActive]);
 
 	return (
 		<header className={'macarena--header bg-neutral-0 static inset-x-0 top-0 mb-5 flex h-24 w-full flex-row'}>
