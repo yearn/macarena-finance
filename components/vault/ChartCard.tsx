@@ -1,4 +1,4 @@
-import	React, {ReactElement, ReactNode}		from	'react';
+import	React, {ReactElement}		from	'react';
 import	useSWR									from	'swr';
 import	{request}								from	'graphql-request';
 import	{Line}									from	'react-chartjs-2';
@@ -8,16 +8,8 @@ import	{Chart, Filler, Tooltip,
 import {formatDate}								from 	'@yearn-finance/web-lib/utils/format';
 import {toNormalizedValue} 						from 	'@yearn-finance/web-lib/utils/format.bigNumber';
 import useSettings 								from 	'@yearn-finance/web-lib/contexts/useSettings';
-import {useClientEffect} 						from '@yearn-finance/web-lib/hooks/useClientEffect';
-
-// TODO
-function Card({children, className, padding}: {children?: ReactNode; className?: string; padding?: string;}): ReactElement {
-	return (
-		<div className={className} style={{padding}}>
-			{children}
-		</div>
-	);
-}
+import {useClientEffect} 						from 	'@yearn-finance/web-lib/hooks/useClientEffect';
+import {Card} 									from 	'components/common/Card';
 
 /* 🔵 - Yearn Finance **********************************************************
 ** Simple formula ((final value - initial value) / (initial value)) to get the

@@ -1,24 +1,18 @@
-import	React, {ReactElement, ReactNode}										from	'react';
-import	Image														from	'next/image';
-import	{ethers}													from	'ethers';
-import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
-import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
-import performBatchedUpdates from '@yearn-finance/web-lib/utils/performBatchedUpdates';
-import {toAddress} from '@yearn-finance/web-lib/utils/address';
-import {formatToNormalizedValue} from '@yearn-finance/web-lib/utils/format';
-import {BN, bigNumberAsAmount} from '@yearn-finance/web-lib/utils/format.bigNumber';
-import	useWallet													from	'contexts/useWallet';
-import	type {TVault}												from	'contexts/useYearn.d';
-import {parseMarkdown} from '@yearn-finance/web-lib/utils/helpers';
+import	React, {ReactElement}		from	'react';
+import	Image						from	'next/image';
+import	{ethers}					from	'ethers';
+import {formatAmount}				from 	'@yearn-finance/web-lib/utils/format.number';
+import {useWeb3}					from 	'@yearn-finance/web-lib/contexts/useWeb3';
+import performBatchedUpdates		from 	'@yearn-finance/web-lib/utils/performBatchedUpdates';
+import {toAddress}					from 	'@yearn-finance/web-lib/utils/address';
+import {formatToNormalizedValue}	from 	'@yearn-finance/web-lib/utils/format';
+import {BN, bigNumberAsAmount}		from 	'@yearn-finance/web-lib/utils/format.bigNumber';
+import	useWallet					from	'contexts/useWallet';
+import {parseMarkdown} 				from 	'@yearn-finance/web-lib/utils/helpers';
+import {AddressWithActions} 		from 	'components/common/AddressWithActions';
+import {Card} 						from 'components/common/Card';
 
-// TODO
-function Card({children, className, padding}: {children: ReactNode; className?: string; padding?: string;}): ReactElement {
-	return (
-		<div className={className} style={{padding}}>
-			{children}
-		</div>
-	);
-}
+import	type {TVault}				from	'contexts/useYearn.d';
 
 /* 🔵 - Yearn Finance **********************************************************
 ** The OverviewCard component is a simple card used to display some relevant
@@ -79,7 +73,7 @@ function	OverviewCard({currentVault, address}: {currentVault?: TVault, address: 
 					src={currentVault?.token?.icon || ''}
 					width={80}
 					height={80}
-					className={'min-w-[80px]'} /> : <div className={'bg-neutral-0 h-[80px] w-[80px] rounded-full'} />}
+					className={'min-w-[80px]'} /> : <div className={'h-[80px] w-[80px] rounded-full bg-neutral-0'} />}
 				<div>
 					<h2 className={'-mt-1 -mb-2 text-xl font-bold text-neutral-700 md:text-5xl'}>
 						{currentVault?.name || ''}

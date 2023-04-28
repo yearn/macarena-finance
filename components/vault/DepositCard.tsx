@@ -15,6 +15,9 @@ import	{approveERC20}						from	'utils/actions/approveToken';
 import	{depositToken}						from	'utils/actions/depositToken';
 import	{withdrawShare}						from	'utils/actions/withdrawShare';
 import	useWallet							from	'contexts/useWallet';
+import {Input}  							from 	'components/common/Input';
+import {Button} 							from 	'components/common/Button';
+
 import type {TVault}						from	'contexts/useYearn.d';
 
 /* 🔵 - Yearn Finance **********************************************************
@@ -281,7 +284,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 											<Line className={'text-typo-secondary'}/>
 										</div>
 										<div className={'flex justify-end'}>
-											<p className={'text-typo-secondary z-10 bg-neutral-0 pl-2 text-right'}>
+											<p className={'text-typo-secondary bg-neutral-0 z-10 pl-2 text-right'}>
 												{formatAmount(getWithdrawReceiveTokens(), 2, 6)}
 											</p>
 										</div>
@@ -295,7 +298,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 											<Line className={'text-typo-secondary'}/>
 										</div>
 										<div className={'flex justify-end'}>
-											<p className={'text-typo-secondary z-10 bg-neutral-0 pl-2 text-right'}>
+											<p className={'text-typo-secondary bg-neutral-0 z-10 pl-2 text-right'}>
 												{`$ ${formatAmount(getWithdrawReceiveValue(), 2, 2)}`}
 											</p>
 										</div>
@@ -341,7 +344,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 										<Line className={'text-typo-secondary'}/>
 									</div>
 									<div className={'flex justify-end'}>
-										<p className={'text-typo-secondary z-10 bg-neutral-0 pl-2 text-right'}>
+										<p className={'text-typo-secondary bg-neutral-0 z-10 pl-2 text-right'}>
 											{formatAmount(getDepositReceiveTokens(), 2, 6)}
 										</p>
 									</div>
@@ -355,7 +358,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 										<Line className={'text-typo-secondary'}/>
 									</div>
 									<div className={'flex justify-end'}>
-										<p className={'text-typo-secondary z-10 bg-neutral-0 pl-2 text-right'}>
+										<p className={'text-typo-secondary bg-neutral-0 z-10 pl-2 text-right'}>
 											{`$ ${formatAmount(getDepositReceiveValue(), 2, 2)}`}
 										</p>
 									</div>
@@ -407,7 +410,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 				</Button>
 				<Button
 					variant={'filled'}
-					className={'h-12 border-none border-neutral-0/0'}
+					className={'border-neutral-0/0 h-12 border-none'}
 					onClick={onDeposit}
 					isBusy={txStatusDeposit.pending}
 					isDisabled={

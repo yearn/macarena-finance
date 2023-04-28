@@ -2,11 +2,14 @@ import	React, {ReactElement}	from	'react';
 import	Image					from	'next/image';
 import	Link					from	'next/link';
 import	{motion}				from	'framer-motion';
-import	{Button, Card}			from	'@yearn-finance/web-lib/components';
-import	* as utils				from	'@yearn-finance/web-lib/utils';
 import	useYearn				from	'contexts/useYearn';
-import type {TVault}			from	'contexts/useYearn.d';
 import	Filters					from	'components/Filters';
+import {Card} 					from 	'components/common/Card';
+import {formatAmount} 			from 	'@yearn-finance/web-lib/utils/format.number';
+import {Button} 				from 	'components/common/Button';
+import performBatchedUpdates 	from 	'@yearn-finance/web-lib/utils/performBatchedUpdates';
+
+import type {TVault}			from	'contexts/useYearn.d';
 
 function	VaultCard({currentVault}: {currentVault: TVault}): ReactElement {
 	const slashMotion = {
@@ -31,7 +34,7 @@ function	VaultCard({currentVault}: {currentVault: TVault}): ReactElement {
 								</div>
 								<div className={'flex flex-col text-right'}>
 									<p className={'text-xs text-neutral-700'}>{'APY'}</p>
-									<b className={'text-4xl'}>{Number((currentVault.apy.net_apy * 100).toFixed(2)) === 0 ? '-' : `${utils.format.amount(currentVault.apy.net_apy * 100, 2, 2)}%`}</b>
+									<b className={'text-4xl'}>{Number((currentVault.apy.net_apy * 100).toFixed(2)) === 0 ? '-' : `${formatAmount(currentVault.apy.net_apy * 100, 2, 2)}%`}</b>
 								</div>
 							</div>
 							<div>
@@ -44,7 +47,7 @@ function	VaultCard({currentVault}: {currentVault: TVault}): ReactElement {
 						<div className={'space-y-6 p-4 md:p-6'}>
 							<div>
 								<p className={'text-sm text-neutral-700'}>{'TVL'}</p>
-								<b className={'text-4xl'}>{`$${utils.format.amount(currentVault.tvl.tvl / 1000_000, 2, 2)}m`}</b>
+								<b className={'text-4xl'}>{`$${formatAmount(currentVault.tvl.tvl / 1000_000, 2, 2)}m`}</b>
 							</div>
 
 							<div>
@@ -52,15 +55,15 @@ function	VaultCard({currentVault}: {currentVault: TVault}): ReactElement {
 								<div className={'mt-2 grid grid-cols-3 gap-4'}>
 									<div className={'flex flex-col'}>
 										<p className={'text-xs text-neutral-700/70'}>{'Last 7 days'}</p>
-										<b className={'text-neutral-700'}>{`${utils.format.amount(currentVault.apy.points.week_ago * 100, 2, 2)}%`}</b>
+										<b className={'text-neutral-700'}>{`${formatAmount(currentVault.apy.points.week_ago * 100, 2, 2)}%`}</b>
 									</div>
 									<div className={'flex flex-col'}>
 										<p className={'text-xs text-neutral-700/70'}>{'Last 30 days'}</p>
-										<b className={'text-neutral-700'}>{`${utils.format.amount(currentVault.apy.points.month_ago * 100, 2, 2)}%`}</b>
+										<b className={'text-neutral-700'}>{`${formatAmount(currentVault.apy.points.month_ago * 100, 2, 2)}%`}</b>
 									</div>
 									<div className={'flex flex-col'}>
 										<p className={'text-xs text-neutral-700/70'}>{'All Time'}</p>
-										<b className={'text-neutral-700'}>{`${utils.format.amount(currentVault.apy.points.inception * 100, 2, 2)}%`}</b>
+										<b className={'text-neutral-700'}>{`${formatAmount(currentVault.apy.points.inception * 100, 2, 2)}%`}</b>
 									</div>
 								</div>
 							</div>
@@ -107,7 +110,7 @@ function	Index(): ReactElement {
 		if (selectedCategory !== '')
 			_filteredVaults = _filteredVaults.filter((vault): boolean => vault.categories.includes(selectedCategory));
 		_filteredVaults = _filteredVaults.sort((a, b): number => b.apy.net_apy - a.apy.net_apy);
-		utils.performBatchedUpdates((): void => {
+		performBatchedUpdates((): void => {
 			set_filteredVaults(_filteredVaults);
 		});
 	}, [dataNonce, vaults, selectedCategory]);

@@ -1,4 +1,4 @@
-import	React, {ReactElement, ReactNode}	from	'react';
+import	React, {ReactElement}	from	'react';
 import	Link								from	'next/link';
 import	{useRouter}							from	'next/router';
 import Chevron 								from 	'@yearn-finance/web-lib/icons/IconChevron';
@@ -7,18 +7,12 @@ import	useYearn							from	'contexts/useYearn';
 import	DepositCard							from	'components/vault/DepositCard';
 import	OverviewCard						from	'components/vault/OverviewCard';
 import	ChartCard							from	'components/vault/ChartCard';
-import type {TVault}						from	'contexts/useYearn.d';
 import useWeb3 								from	'@yearn-finance/web-lib/contexts/useWeb3';
 import {toAddress} 							from	'@yearn-finance/web-lib/utils/address';
+import {AddressWithActions} 				from 	'components/common/AddressWithActions';
+import {Card}								from 	'components/common/Card';
 
-// TODO
-function Card({children, className, padding}: {children: ReactNode; className?: string; padding?: string;}): ReactElement {
-	return (
-		<div className={className} style={{padding}}>
-			{children}
-		</div>
-	);
-}
+import type {TVault}						from	'contexts/useYearn.d';
 
 function	Vault(): ReactElement {
 	const	router = useRouter();

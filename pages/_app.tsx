@@ -18,6 +18,7 @@ import	Meta														from	'components/Meta';
 import	KBar														from	'components/Kbar';
 import	KBarButton													from	'components/KBarButton';
 import	LogoMacarena												from	'components/icons/LogoMacarena';
+import {Dropdown} 													from 	'components/common/Dropdown';
 
 import	'../style.css';
 

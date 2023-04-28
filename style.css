@@ -1,5 +1,5 @@
 /* This will load Tailwindcss + all the overwrite from Yearn lib */
-@import '@yearn-finance/web-lib/dist/style.css';
+@import "@yearn-finance/web-lib/style.css";
 
 * {
 	@apply font-mono;
@@ -79,7 +79,7 @@
 			@apply mr-2 w-4 min-w-[16px] h-4 text-neutral-500/60;
 		}
 		& .macarena--kbar-searchLabel {
-			@apply flex items-center h-10 yearn--searchBox-input text-neutral-500/60;
+			@apply flex items-center h-10 p-0 w-full bg-transparent border-none focus:border-none outline-none focus:outline-none focus:ring-0 text-neutral-500/60;
 		}
 	}
 
