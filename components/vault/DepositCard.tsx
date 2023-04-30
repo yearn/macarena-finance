@@ -313,7 +313,7 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 								<b>{currentVault?.token?.symbol || ''}</b>
 							</div>
 						</div>
-						<div className={'rounded-default flex h-24 w-full flex-col bg-neutral-200 py-2 px-4 md:h-32 md:py-4 md:px-6'}>
+						<div className={'rounded-default flex h-24 w-full flex-col overflow-hidden bg-neutral-200 py-2 px-4 md:h-32 md:py-4 md:px-6'}>
 							<Input.BigNumber
 								balance={utils.format.toNormalizedAmount(balanceOfToken, currentVault?.decimals)}
 								price={utils.format.toNormalizedValue(priceOfToken, 6)}
