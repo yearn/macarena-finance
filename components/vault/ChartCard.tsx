@@ -103,7 +103,7 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 		const graphURI = networks[network].graphURI;
 
 		if (graphURI) {
-			request(graphURI, query);
+			return request(graphURI, query);
 		}
 	}
 	);
