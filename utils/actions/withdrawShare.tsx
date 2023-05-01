@@ -3,7 +3,7 @@ import	{ContractInterface, ethers} from	'ethers';
 import	VAULT_ABI					from	'utils/abi/vault.v2.abi';
 
 export async function	withdrawShare(
-	provider: ethers.providers.JsonRpcProvider | ethers.providers.JsonRpcProvider,
+	provider: ethers.providers.JsonRpcProvider,
 	vaultAddress: string,
 	maxShares: ethers.BigNumber
 ): Promise<TTxResponse> {
