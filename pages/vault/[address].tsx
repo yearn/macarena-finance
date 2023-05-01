@@ -1,14 +1,17 @@
-import	React, {ReactElement}				from	'react';
+import	React, {ReactElement}	from	'react';
 import	Link								from	'next/link';
 import	{useRouter}							from	'next/router';
-import	{AddressWithActions, Card}			from	'@yearn-finance/web-lib/components';
-import	{parseMarkdown, toAddress}			from	'@yearn-finance/web-lib/utils';
-import	{Chevron}							from	'@yearn-finance/web-lib/icons';
-import	{useWeb3}							from	'@yearn-finance/web-lib/contexts';
+import Chevron 								from 	'@yearn-finance/web-lib/icons/IconChevron';
+import {parseMarkdown} 						from 	'@yearn-finance/web-lib/utils/helpers';
 import	useYearn							from	'contexts/useYearn';
 import	DepositCard							from	'components/vault/DepositCard';
 import	OverviewCard						from	'components/vault/OverviewCard';
 import	ChartCard							from	'components/vault/ChartCard';
+import useWeb3 								from	'@yearn-finance/web-lib/contexts/useWeb3';
+import {toAddress} 							from	'@yearn-finance/web-lib/utils/address';
+import {AddressWithActions} 				from 	'components/common/AddressWithActions';
+import {Card}								from 	'components/common/Card';
+
 import type {TVault}						from	'contexts/useYearn.d';
 
 function	Vault(): ReactElement {
@@ -45,7 +48,7 @@ function	Vault(): ReactElement {
 					chainID={chainID} />
 			</div>
 			<div className={'mt-4 grid grid-cols-1 gap-4 md:grid-cols-5'}>
-				<div className={'col-span-1 md:col-span-3'}>
+				<div className={'yearn--card col-span-1 md:col-span-3'}>
 					<Card>
 						<div className={'mb-4'}>
 							<b>{'Strategies'}</b>
@@ -59,7 +62,7 @@ function	Vault(): ReactElement {
 											address={strategy.address}
 											className={'text-sm font-normal'} />
 										<p
-											className={'mt-4 text-xs line-clamp-4'}
+											className={'line-clamp-4 mt-4 text-xs'}
 											dangerouslySetInnerHTML={{__html: parseMarkdown((strategy?.description || '').replace(/{{token}}/g, currentVault.token.symbol) || '')}} />
 									
 									</div>
@@ -69,7 +72,7 @@ function	Vault(): ReactElement {
 					</Card>
 				</div>
 				<div className={'col-span-1 md:col-span-2'}>
-					<Card className={'w-full max-w-full overflow-hidden'} padding={'none'}>
+					<Card className={'yearn--card w-full max-w-full overflow-hidden'} padding={'none'}>
 						{currentVault && <DepositCard currentVault={currentVault} />}
 					</Card>
 				</div>

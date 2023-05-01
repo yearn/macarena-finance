@@ -1,7 +1,11 @@
 import	React, {ReactElement, useContext, createContext}		from	'react';
 import	{Contract}												from	'ethcall';
-import	{useSettings, useWeb3}									from	'@yearn-finance/web-lib/contexts';
-import	{format, toAddress, providers, performBatchedUpdates}	from	'@yearn-finance/web-lib/utils';
+import {useWeb3}												from '@yearn-finance/web-lib/contexts/useWeb3';
+import performBatchedUpdates									from '@yearn-finance/web-lib/utils/performBatchedUpdates';
+import {useSettings}											from '@yearn-finance/web-lib/contexts/useSettings';
+import {toAddress}												from '@yearn-finance/web-lib/utils/address';
+import {formatToNormalizedValue}								from '@yearn-finance/web-lib/utils/format';
+import {getProvider, newEthCallProvider} 						from '@yearn-finance/web-lib/utils/web3/providers';
 import	VAULT_V2_ABI											from	'utils/abi/vault.v2.abi';
 import	ERC20_ABI												from	'utils/abi/erc20.abi';
 import	LENS_ABI												from	'utils/abi/lens.abi';
@@ -55,8 +59,8 @@ export const WalletContextApp = ({children, vaults}: {children: ReactElement, va
 			return;
 		}
 
-		const	currentProvider = provider || providers.getProvider(chainID);
-		const	ethcallProvider = await providers.newEthCallProvider(currentProvider);
+		const	currentProvider = provider || getProvider(chainID);
+		const	ethcallProvider = await newEthCallProvider(currentProvider);
 		const	userAddress = address || '0x0000000000000000010000000000000000000000'; //using this address as dummy
 		const	_vaults = vaults.filter((v): boolean => v.chainID === chainID || (v.chainID === 1 && chainID === 1337));
 		const	calls = [];
@@ -64,7 +68,7 @@ export const WalletContextApp = ({children, vaults}: {children: ReactElement, va
 		for (const vault of _vaults) {
 			const	vaultContract = new Contract(vault.address, VAULT_V2_ABI);
 			const	underlyingTokenContract = new Contract(vault.token.address, ERC20_ABI);
-			const	lensPriceContract = new Contract(networks[chainID === 1337 ? 1 : chainID || 1].lensAddress, LENS_ABI);
+			const	lensPriceContract = new Contract(networks[chainID === 1337 ? 1 : chainID || 1].lensOracleAddress!, LENS_ABI);
 
 			calls.push(...[
 				vaultContract.balanceOf(userAddress),
@@ -92,23 +96,23 @@ export const WalletContextApp = ({children, vaults}: {children: ReactElement, va
 
 			_balances[toAddress(vault.address)] = {
 				raw: vaultBalance,
-				normalized: format.toNormalizedValue(vaultBalance, vault.decimals)
+				normalized: formatToNormalizedValue(vaultBalance, vault.decimals)
 			};
 			_balances[toAddress(vault.token.address)] = {
 				raw: tokenBalance,
-				normalized: format.toNormalizedValue(tokenBalance, vault.token.decimals)
+				normalized: formatToNormalizedValue(tokenBalance, vault.token.decimals)
 			};
 			_allowances[toAddress(vault.token.address)] = {
 				raw: tokenAllowance,
-				normalized: format.toNormalizedValue(tokenAllowance, vault.token.decimals)
+				normalized: formatToNormalizedValue(tokenAllowance, vault.token.decimals)
 			};
 			_prices[toAddress(vault.address)] = {
 				raw: vaultPricePerShare,
-				normalized: format.toNormalizedValue(vaultPricePerShare, vault.decimals)
+				normalized: formatToNormalizedValue(vaultPricePerShare, vault.decimals)
 			};
 			_prices[toAddress(vault.token.address)] = {
 				raw: tokenPrice,
-				normalized: format.toNormalizedValue(tokenPrice, 6)
+				normalized: formatToNormalizedValue(tokenPrice, 6)
 			};
 		}
 
@@ -128,13 +132,13 @@ export const WalletContextApp = ({children, vaults}: {children: ReactElement, va
 			return;
 		}
 
-		const	currentProvider = provider || providers.getProvider(chainID);
-		const	ethcallProvider = await providers.newEthCallProvider(currentProvider);
+		const	currentProvider = provider || getProvider(chainID);
+		const	ethcallProvider = await newEthCallProvider(currentProvider);
 		const	userAddress = address;
 		const	calls = [];
 		const	vaultContract = new Contract(vault.address, VAULT_V2_ABI);
 		const	underlyingTokenContract = new Contract(vault.token.address, ERC20_ABI);
-		const	lensPriceContract = new Contract(networks[chainID === 1337 ? 1 : chainID || 1].lensAddress, LENS_ABI);
+		const	lensPriceContract = new Contract(networks[chainID === 1337 ? 1 : chainID || 1].lensOracleAddress!, LENS_ABI);
 
 		calls.push(...[
 			vaultContract.balanceOf(userAddress),
@@ -160,23 +164,23 @@ export const WalletContextApp = ({children, vaults}: {children: ReactElement, va
 
 		_balances[toAddress(vault.address)] = {
 			raw: vaultBalance,
-			normalized: format.toNormalizedValue(vaultBalance, vault.decimals)
+			normalized: formatToNormalizedValue(vaultBalance, vault.decimals)
 		};
 		_balances[toAddress(vault.token.address)] = {
 			raw: tokenBalance,
-			normalized: format.toNormalizedValue(tokenBalance, vault.token.decimals)
+			normalized: formatToNormalizedValue(tokenBalance, vault.token.decimals)
 		};
 		_allowances[toAddress(vault.token.address)] = {
 			raw: tokenAllowance,
-			normalized: format.toNormalizedValue(tokenAllowance, vault.token.decimals)
+			normalized: formatToNormalizedValue(tokenAllowance, vault.token.decimals)
 		};
 		_prices[toAddress(vault.address)] = {
 			raw: vaultPricePerShare,
-			normalized: format.toNormalizedValue(vaultPricePerShare, vault.decimals)
+			normalized: formatToNormalizedValue(vaultPricePerShare, vault.decimals)
 		};
 		_prices[toAddress(vault.token.address)] = {
 			raw: tokenPrice,
-			normalized: format.toNormalizedValue(tokenPrice, 6)
+			normalized: formatToNormalizedValue(tokenPrice, 6)
 		};
 
 		performBatchedUpdates((): void => {

@@ -1,9 +1,14 @@
 /* This will load Tailwindcss + all the overwrite from Yearn lib */
-@import '@yearn-finance/web-lib/dist/style.css';
+@import "@yearn-finance/web-lib/style.css";
 
 * {
 	@apply font-mono;
 }
+
+body {@apply text-neutral-700;}
+h1 {@apply text-xl font-bold text-primary-500;}
+h4 {@apply text-lg font-bold text-neutral-700;}
+#__next {@apply w-full h-full}
 
 :root body[data-theme="macarena"] {
 	--default-rounded: 2px;
@@ -24,15 +29,92 @@
 
 	@apply bg-neutral-200;
 
-	& .yearn--button {
-		@apply h-10;
-		&[data-variant="filled"] {
-			@apply border border-black;
+	/* -- Dropdown.tsx ----------------------------------------------------- */
+	& .yearn--dropdown-menu {
+		--dropdown-text-color: hsl(var(--color-primary-500));
+		--dropdown-bg-color: hsl(var(--color-neutral-300));
+		--dropdown-bg-color-active: hsl(var(--color-neutral-600));
+		--dropdown-border-width: 0px;
+		--dropdown-border-color: transparent;
+
+		@apply flex overflow-y-auto absolute left-0 flex-col mt-1 w-full min-w-fit max-h-60 scrollbar-none;
+		border-radius: var(--default-rounded);
+		border: solid var(--dropdown-border-width) var(--dropdown-border-color);
+		background: var(--dropdown-bg-color);
+	}
+	& .yearn--dropdown-menu-item {
+		@apply flex flex-row items-center cursor-pointer py-1 pr-4 pl-3 transition-colors;
+		color: var(--dropdown-text-color);
+		&[data-active="true"] {
+			background-color: var(--dropdown-bg-color-active);
 		}
 	}
 
+	/* -- Button.tsx ------------------------------------------------------- */
+	& .yearn--button {
+		@apply cursor-pointer px-3 flex justify-center items-center h-10 text-base transition-colors relative;
+		border-radius: var(--default-rounded);
+
+		&[data-variant="filled"] {
+			@apply text-neutral-0 bg-accent-500 font-bold;
+			&:disabled {@apply bg-neutral-200 text-neutral-400;}
+			&:not(:disabled):not([aria-busy="true"]):hover {@apply bg-accent-600;}
+		}
+		&[data-variant="light"] {
+			@apply text-primary-500 bg-primary-100;
+			&:disabled {@apply bg-neutral-200 text-neutral-400;}
+			&:not(:disabled):not([aria-busy="true"]):hover {@apply bg-primary-200;}
+		}
+		&[data-variant="outlined"] {
+			@apply text-accent-500 bg-transparent border border-accent-500;
+			&:disabled {@apply border-neutral-400 text-neutral-400;}
+			&:not(:disabled):not([aria-busy="true"]):hover {@apply bg-primary-100;}
+		}
+		&[aria-busy="true"] {@apply !text-white/0 cursor-wait;}
+		&:disabled {@apply cursor-not-allowed;}
+	}
+
+	/* -- Card.tsx --------------------------------------------------------- */
+	& .yearn--card-tab-item {
+		--card-tab-color-active: hsl(var(--color-primary-500));
+		--card-tab-color: hsl(var(--color-neutral-400));
+		--card-bg-color: hsl(var(--color-neutral-200));
+
+		@apply w-full h-20 border-b-2 flex-center cursor-pointer;
+		&.selected {
+			@apply font-bold;
+			border-color: var(--card-tab-color-active);
+			color: var(--card-tab-color-active);
+		}
+		&:not(.selected) {
+			@apply transition-colors cursor-pointer;
+			border-color: var(--card-tab-color);
+			color: var(--card-tab-color);
+			&:hover {
+				background-color: var(--card-bg-color);
+			}
+		}
+	}
+	& .yearn--card-tab {
+		@apply flex flex-row w-full;
+		border-bottom-left-radius: 0 !important;
+		border-bottom-right-radius: 0 !important;
+		& > .yearn--card-tab-item:first-child {
+			border-top-left-radius: var(--default-rounded);
+		}
+		& > .yearn--card-tab-item:last-child {
+			border-top-right-radius: var(--default-rounded);
+		}
+	}
 	& .yearn--card {
-		@apply border border-neutral-200 !shadow-none;
+		@apply shadow-none transition-all;
+		border-radius: var(--default-rounded);
+		&[role="button"] {@apply cursor-pointer hover:bg-neutral-0 shadow-lg;}
+		&[data-variant="background"] {@apply bg-neutral-100;}
+		&[data-variant="surface"] {@apply bg-neutral-0;}
+		&[data-padding="narrow"] {@apply p-2 md:p-4;}
+		&[data-padding="regular"] {@apply p-4 md:p-6;}
+		&[data-padding="relaxed"] {@apply p-8;}
 	}
 
 	& .yearn--searchBox-wrapper {
@@ -58,14 +140,6 @@
 		--elementWithActions-action-color-hover: hsl(var(--color-primary-600));
 	}
 
-	& .yearn--dropdown-menu {
-		--dropdown-text-color: hsl(var(--color-primary-500));
-		--dropdown-bg-color: hsl(var(--color-neutral-300));
-		--dropdown-bg-color-active: hsl(var(--color-primary-200));
-		--dropdown-border-width: 0px;
-		--dropdown-border-color: black;
-	}
-
 	& .macarena--kbar-wrapper {
 		@apply rounded-default border border-black;
 	}
@@ -79,7 +153,7 @@
 			@apply mr-2 w-4 min-w-[16px] h-4 text-neutral-500/60;
 		}
 		& .macarena--kbar-searchLabel {
-			@apply flex items-center h-10 yearn--searchBox-input text-neutral-500/60;
+			@apply flex items-center h-10 p-0 w-full bg-transparent border-none focus:border-none outline-none focus:outline-none focus:ring-0 text-neutral-500/60;
 		}
 	}
 
@@ -123,19 +197,66 @@
 		}
 	}
 
-	& .yearn--input-field {
-		width: 100%;
-		border-style: none;
-		background-color: rgb(255 255 255 / 0);
-		padding: 0px;
-		font-size: 24px;
-		line-height: 32px;
-		font-weight: 700;
-		outline: 2px solid transparent;
-		outline-offset: 2px;
-		@apply placeholder:text-white/20;
+	/* -- ElementWithActions.tsx ------------------------------------------- */
+	& .yearn--elementWithActions-copy {
+		@apply cursor-copy px-1 md:px-2;
 	}
-	& .yearn--input-field:focus {
-		@apply ring-0;
+	& .yearn--elementWithActions-linkout {
+		@apply cursor-alias;
+		& > a {@apply cursor-alias;}
+	}
+	& .yearn--elementWithActions-icon {
+		@apply w-4 h-4 transition-colors;
+		color: var(--elementWithActions-action-color);
+		&:hover {
+			color: var(--elementWithActions-action-color-hover);
+		}
+	}
+	& .yearn--elementWithActions {
+		@apply font-mono font-bold text-left;
+		color: var(--elementWithActions-text-color);
+		& ~ button {
+			@apply flex justify-center items-center p-0 w-8 h-8;
+			border-radius: var(--default-rounded);
+		}
+	}
+
+	& .yearn--elementWithActions-wrapper {
+		--elementWithActions-text-color: hsl(var(--color-neutral-700));
+		--elementWithActions-action-color: hsl(var(--color-primary-500));
+		--elementWithActions-action-color-hover: hsl(var(--color-primary-600));
+		@apply flex flex-row items-center;
+	}
+
+	/* -- Input.tsx -------------------------------------------------------- */
+	& .yearn--input-field {
+		@apply p-0 w-full text-xl font-bold bg-white/0 border-none focus:border-none outline-none focus:outline-none focus:ring-0;
+	}
+	& .yearn--input-field-wrapper {
+		@apply flex flex-row items-center py-2 h-8 w-full transition-colors;
+	}
+	& .yearn--input-max {
+		@apply py-1 px-2 ml-2 transition-colors cursor-pointer;
+		border-radius: var(--default-rounded);
+		background-color: var(--input-max-bg-color);
+		color: var(--input-max-text-color);
+		border: solid var(--input-max-border-width) var(--input-max-border-color);
+		&:hover {
+			background-color: var(--input-max-bg-color-hover);
+		}
+	}
+	& .yearn--input {
+		--input-label-color: hsl(var(--color-neutral-500));
+		--input-max-bg-color: transparent;
+		--input-max-bg-color-hover: hsl(var(--color-primary-100));
+		--input-max-text-color: hsl(var(--color-primary-500));
+		--input-max-border-color: hsl(var(--color-primary-500));
+		--input-max-border-width: 1px;
+
+		@apply space-y-1 md:space-y-2;
+		& > p {
+			@apply text-sm md:text-base transition-colors;
+			color: var(--input-label-color);
+		}
 	}
 }

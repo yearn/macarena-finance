@@ -5,16 +5,20 @@ import	Link														from	'next/link';
 import	{useRouter}													from	'next/router';
 import	{AnimatePresence, motion}									from	'framer-motion';
 import	{KBarProvider, Action, createAction, useRegisterActions}	from	'kbar';
-import	{useWeb3, WithYearn}										from	'@yearn-finance/web-lib/contexts';
-import	{Dropdown}													from	'@yearn-finance/web-lib/components';
-import	{truncateHex}												from	'@yearn-finance/web-lib/utils';
-import	{NetworkEthereum, NetworkFantom, SocialDiscord,
-	SocialGithub, SocialTwitter}									from	'@yearn-finance/web-lib/icons';
+import {useWeb3} 													from 	'@yearn-finance/web-lib/contexts/useWeb3';
+import NetworkEthereum 												from 	'@yearn-finance/web-lib/icons/IconNetworkEthereum';
+import NetworkFantom 												from 	'@yearn-finance/web-lib/icons/IconNetworkFantom';
+import SocialGithub 												from 	'@yearn-finance/web-lib/icons/IconSocialGithub';
+import SocialTwitter 												from 	'@yearn-finance/web-lib/icons/IconSocialTwitter';
+import SocialDiscord 												from 	'@yearn-finance/web-lib/icons/IconSocialDiscord';
+import {WithYearn} 													from 	'@yearn-finance/web-lib/contexts/WithYearn';
+import {truncateHex} 												from 	'@yearn-finance/web-lib/utils/address';
 import	useYearn, {YearnContextApp}									from	'contexts/useYearn';
 import	Meta														from	'components/Meta';
 import	KBar														from	'components/Kbar';
 import	KBarButton													from	'components/KBarButton';
 import	LogoMacarena												from	'components/icons/LogoMacarena';
+import {Dropdown} 													from 	'components/common/Dropdown';
 
 import	'../style.css';
 
@@ -58,8 +62,8 @@ function	Header(): ReactElement {
 	}, [chainID, isActive]);
 
 	return (
-		<header className={'macarena--header static inset-x-0 top-0 mb-5 flex h-24 w-full flex-row bg-neutral-0'}>
-			<div className={'mx-auto h-full w-full rounded-sm bg-neutral-0'}>
+		<header className={'macarena--header bg-neutral-0 static inset-x-0 top-0 mb-5 flex h-24 w-full flex-row'}>
+			<div className={'bg-neutral-0 mx-auto h-full w-full rounded-sm'}>
 				<div className={'mx-auto h-full w-full max-w-6xl'}>
 					<div className={'grid h-full w-full grid-cols-3 justify-center'}>
 						<div aria-label={'search'} className={'hidden items-center justify-start md:flex'}>
@@ -214,14 +218,14 @@ function	MyApp(props: AppProps): ReactElement {
 	return (
 		<WithYearn
 			options={{
+				web3: {
+					supportedChainID: [1, 10, 250, 42161, 1337]
+				},
+				baseSettings: {
+					yDaemonBaseURI: process.env.YDAEMON_BASE_URI as string
+				},
 				ui: {
 					shouldUseThemes: false
-				},
-				web3: {
-					shouldUseWallets: true,
-					shouldUseStrictChainMode: false,
-					defaultChainID: 1,
-					supportedChainID: [1, 250, 1337]
 				}
 			}}>
 			<YearnContextApp>
