@@ -54,8 +54,8 @@ function	OverviewCard({currentVault, address}: {currentVault?: TVault, address: 
 	** This function is set in a callback for performance reasons.
 	**************************************************************************/
 	const	getShareValue = React.useCallback((): string => {
-		const	_amount =formatToNormalizedValue(shareOfVault, currentVault?.decimals || 18);
-		const	_price =formatToNormalizedValue(priceOfVault, currentVault?.decimals || 18);
+		const	_amount = formatToNormalizedValue(shareOfVault, currentVault?.decimals || 18);
+		const	_price = formatToNormalizedValue(priceOfVault, currentVault?.decimals || 18);
 		const	_value = (_amount * _price);
 		if (Number(_value) === 0) {
 			return ('-');
