@@ -6,7 +6,7 @@ import	useYearn				from	'contexts/useYearn';
 import	Filters					from	'components/Filters';
 import {Card} 					from 	'components/common/Card';
 import {formatAmount} 			from 	'@yearn-finance/web-lib/utils/format.number';
-import {Button} 				from 	'components/common/Button';
+import {Button} 				from 	'@yearn-finance/web-lib/components/Button';
 import performBatchedUpdates 	from 	'@yearn-finance/web-lib/utils/performBatchedUpdates';
 
 import type {TVault}			from	'contexts/useYearn.d';

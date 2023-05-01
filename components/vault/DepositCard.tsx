@@ -16,7 +16,7 @@ import	{depositToken}						from	'utils/actions/depositToken';
 import	{withdrawShare}						from	'utils/actions/withdrawShare';
 import	useWallet							from	'contexts/useWallet';
 import {Input}  							from 	'components/common/Input';
-import {Button} 							from 	'components/common/Button';
+import {Button} 							from 	'@yearn-finance/web-lib/components/Button';
 
 import type {TVault}						from	'contexts/useYearn.d';
 
