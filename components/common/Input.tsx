@@ -102,7 +102,7 @@ function	InputBigNumber(props: TInputBigNumber): ReactElement {
 				}}
 				isWithMax={isWithMax}
 				disabled={props.disabled} />
-			<p>{`$ ${formatAmount(safeValue * price, 2, 2)}`}</p>
+			<p>{`$ ${formatAmount(safeValue * price, 2, 2, 18)}`}</p>
 		</label>
 	);
 }
