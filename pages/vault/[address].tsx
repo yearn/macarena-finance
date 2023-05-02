@@ -45,7 +45,9 @@ function	Vault(): ReactElement {
 				<ChartCard
 					address={router.query.address as string}
 					price={currentVault?.tvl?.price || 0}
-					chainID={chainID} />
+					decimals={currentVault?.decimals || 18}
+					chainID={chainID}
+				/>
 			</div>
 			<div className={'mt-4 grid grid-cols-1 gap-4 md:grid-cols-5'}>
 				<div className={'yearn--card col-span-1 md:col-span-3'}>

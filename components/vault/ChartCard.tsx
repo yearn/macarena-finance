@@ -38,12 +38,20 @@ type	TChartDataSet = {
 	timestamp: number,
 	value: number
 }
+
+type	TProps = {
+	address: string;
+	price: number;
+	chainID: number;
+	decimals: number;
+};
+
 /* 🔵 - Yearn Finance **********************************************************
 ** The ChartCard component is focused on displaying a chart to make the data
 ** more accessible to users. Data are based on the official Yearn's subgraph,
 ** based on the PricePerShare each day for the last 7/14/30/365 days.
 ******************************************************************************/
-function	ChartCard({address, price, chainID}: {address: string, price: number, chainID: number}): ReactElement {
+function	ChartCard({address, price, chainID, decimals}: TProps): ReactElement {
 	const	{networks} = useSettings();
 	const	[isInit, set_isInit] = React.useState(false);
 	const	[timeoutGrowth, set_timeoutGrowth] = React.useState({minTime: '', maxTime: '', growth: 0});
@@ -59,30 +67,30 @@ function	ChartCard({address, price, chainID}: {address: string, price: number, c
 		data.map((e: TVaultDayData): TChartDataSet => ({
 			label: formatDate(Number(e.timestamp)),
 			timestamp: Number(e.timestamp),
-			value: toNormalizedValue(e.pricePerShare, 18)
+			value: toNormalizedValue(e.pricePerShare, decimals)
 		}))
-	), [data]);
+	), [data, decimals]);
 	const	data30d = React.useMemo((): TChartDataSet[] => (
 		data.slice(-30).map((e: TVaultDayData): TChartDataSet => ({
 			label: formatDate(Number(e.timestamp)),
 			timestamp: Number(e.timestamp),
-			value: toNormalizedValue(e.pricePerShare, 18)
+			value: toNormalizedValue(e.pricePerShare, decimals)
 		}))
-	), [data]);
+	), [data, decimals]);
 	const	data14d = React.useMemo((): TChartDataSet[] => (
 		data.slice(-14).map((e: TVaultDayData): TChartDataSet => ({
 			label: formatDate(Number(e.timestamp)),
 			timestamp: Number(e.timestamp),
-			value: toNormalizedValue(e.pricePerShare, 18)
+			value: toNormalizedValue(e.pricePerShare, decimals)
 		}))
-	), [data]);
+	), [data, decimals]);
 	const	data7d = React.useMemo((): TChartDataSet[] => (
 		data.slice(-7).map((e: TVaultDayData): TChartDataSet => ({
 			label: formatDate(Number(e.timestamp)),
 			timestamp: Number(e.timestamp),
-			value: toNormalizedValue(e.pricePerShare, 18)
+			value: toNormalizedValue(e.pricePerShare, decimals)
 		}))
-	), [data]);
+	), [data, decimals]);
 	const	[currentData, set_currentData] = React.useState(data30d);
 
 	/* 🔵 - Yearn Finance **************************************************
