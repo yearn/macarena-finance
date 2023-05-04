@@ -1,11 +1,13 @@
 import	React, {ReactElement, useContext, createContext}	from	'react';
 import	axios												from	'axios';
 import	NProgress											from	'nprogress';
+import {useRouter}											from	'next/router';
 import performBatchedUpdates 								from 	'@yearn-finance/web-lib/utils/performBatchedUpdates';
 import {useSettings} 										from 	'@yearn-finance/web-lib/contexts/useSettings';
 import {toAddress} 											from 	'@yearn-finance/web-lib/utils/address';
 import {useWeb3} 											from 	'@yearn-finance/web-lib/contexts/useWeb3';
-import	{WalletContextApp}									from	'contexts/useWallet';
+import {WalletContextApp}									from	'contexts/useWallet';
+
 import type {TToken, TVault, TVaultAPI}						from	'contexts/useYearn.d';
 
 type	TYearnContext = {
@@ -19,15 +21,20 @@ const	YearnContext = createContext<TYearnContext>({
 	defaultCategories: ['Simple Saver', 'USD Stable', 'Blue Chip']
 });
 export const YearnContextApp = ({children}: {children: ReactElement}): ReactElement => {
-	const	{chainID} = useWeb3();
+	const	web3 = useWeb3();
 	const	{networks} = useSettings();
 	const	[vaults, set_vaults] = React.useState<TVault[]>([]);
 	const	[nonce, set_nonce] = React.useState(0);
 	const	[defaultCategories, set_defaultCategories] = React.useState<string[]>([]);
+	const 	router = useRouter();
+	const 	{chainID} = router.query;
 
 	const getYearnVaults = React.useCallback(async (): Promise<void> => {
 		NProgress.start();
-		const	networkData = networks[chainID === 1337 ? 1 : chainID || 1];
+		
+		const parsedChainID = chainID ? Number(chainID) === 1337 ? 1 : Number(chainID) || 1 : web3.chainID;
+
+		const	networkData = networks[parsedChainID];
 		const	[api, meta, tok, vs] = await Promise.allSettled([
 			axios.get(`${networkData.apiURI}/vaults/all`),
 			axios.get(`${networkData.metaURI}/strategies/all`),
@@ -99,7 +106,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 			** to endorse. If the vault's address match one of them, include it
 			** in the final list.
 			******************************************************************/
-			if (endorsedVaults[chainID === 1337 ? 1 : chainID || 1].includes(toAddress(vault.address))) {
+			if (endorsedVaults[parsedChainID].includes(toAddress(vault.address))) {
 				return true;
 			}
 			return false;
@@ -169,7 +176,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 
 			vault.categories = ['Simple Saver'];
 			vault.chainID = chainID;
-			if (chainID === 1 || chainID === 1337) {
+			if (Number(chainID) === 1 || Number(chainID) === 1337) {
 				if (toAddress(vault.address) === toAddress('0xdA816459F1AB5631232FE5e97a05BBBb94970c95')) //DAI
 					vault.categories = ['Simple Saver', 'USD Stable'];
 				if (toAddress(vault.address) === toAddress('0xa354F35829Ae975e850e23e9615b11Da1B3dC4DE')) //usdc
@@ -182,7 +189,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 					vault.categories = ['Simple Saver', 'Blue Chip'];
 				if (toAddress(vault.address) === toAddress('0xA696a63cc78DfFa1a63E9E50587C197387FF6C7E')) //BTC
 					vault.categories = ['Simple Saver', 'Blue Chip'];
-			} else if (chainID === 250) {
+			} else if (Number(chainID) === 250) {
 				if (toAddress(vault.address) === toAddress('0x0DEC85e74A92c52b7F708c4B10207D9560CEFaf0')) //yvWFTM
 					vault.categories = ['Simple Saver', 'Blue Chip'];
 				if (toAddress(vault.address) === toAddress('0xEF0210eB96c7EB36AF8ed1c20306462764935607')) //yvUSDC
@@ -207,7 +214,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 			set_defaultCategories([...new Set(_vaults.map((vault): string[] => vault.categories).flat())]);
 			NProgress.done();
 		});
-	}, [chainID, networks]);
+	}, [chainID, networks, web3.chainID]);
 
 	React.useEffect((): void => {
 		getYearnVaults();
