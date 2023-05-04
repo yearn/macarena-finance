@@ -32,7 +32,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 	const getYearnVaults = React.useCallback(async (): Promise<void> => {
 		NProgress.start();
 		
-		const parsedChainID = chainID ? Number(chainID) === 1337 ? 1 : Number(chainID) || 1 : web3.chainID;
+		const parsedChainID = chainID ? Number(chainID) === 1337 ? 1 : Number(chainID) : web3.chainID || 1;
 
 		const	networkData = networks[parsedChainID];
 		const	[api, meta, tok, vs] = await Promise.allSettled([
