@@ -62,7 +62,6 @@ function	Vault(): ReactElement {
 	**************************************************************************/
 	return (
 		<div className={'z-0 w-full'}>
-			{/* <div>{'xrsatrst'}</div> */}
 			<Link href={'/'}>
 				<div className={'mb-4 flex cursor-pointer flex-row items-center  space-x-2 opacity-40 transition-opacity duration-300 hover:opacity-100'}>
 					<Chevron className={'h-4 w-4'} />
