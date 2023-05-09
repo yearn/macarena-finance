@@ -1,8 +1,11 @@
 import	React, {ReactElement}	from	'react';
 import	Link								from	'next/link';
 import	{useRouter}							from	'next/router';
+import {yToast} 							from	'@yearn-finance/web-lib/components/yToast';
+import {useChainID} 						from	'@yearn-finance/web-lib/hooks/useChainID';
 import Chevron 								from 	'@yearn-finance/web-lib/icons/IconChevron';
 import {parseMarkdown} 						from 	'@yearn-finance/web-lib/utils/helpers';
+import CHAINS								from	'@yearn-finance/web-lib/utils/web3/chains';
 import	useYearn							from	'contexts/useYearn';
 import	DepositCard							from	'components/vault/DepositCard';
 import	OverviewCard						from	'components/vault/OverviewCard';
@@ -17,8 +20,35 @@ import type {TVault}						from	'contexts/useYearn.d';
 function	Vault(): ReactElement {
 	const	router = useRouter();
 	const	{vaults} = useYearn();
-	const	{chainID} = useWeb3();
+	const	{chainID, isActive} = useWeb3();
+	const 	{safeChainID} = useChainID();
 	const	[currentVault, set_currentVault] = React.useState<TVault | undefined>(vaults.find((vault): boolean => toAddress(vault.address) === router.query.address));
+	const {toast, toastMaster} = yToast();
+	
+	const [toastState, set_toastState] = React.useState<{id?: string; isOpen: boolean}>({isOpen: false});
+
+	React.useEffect((): void => {
+		if (toastState.isOpen) {
+			if (!!safeChainID && Number(currentVault?.chainID) === safeChainID) {
+				toastMaster.dismiss(toastState.id);
+				set_toastState({isOpen: false});
+			}
+			return;
+		}
+
+		if (isActive && !!safeChainID && currentVault && Number(currentVault?.chainID) !== safeChainID) {
+			const vaultChainName = CHAINS[currentVault.chainID]?.name;
+			const chainName = CHAINS[safeChainID]?.name;
+
+			const toastId = toast({
+				type: 'warning',
+				content: getToastMessage({vaultChainName, chainName}),
+				duration: Infinity
+			});
+
+			set_toastState({id: toastId, isOpen: true});
+		}
+	}, [currentVault, isActive, safeChainID, toast, toastMaster, toastState.id, toastState.isOpen]);
 
 	React.useEffect((): void => {
 		if (router.query.address) {
@@ -81,6 +111,22 @@ function	Vault(): ReactElement {
 			</div>
 		</div>
 	);
+}
+
+export function getToastMessage({vaultChainName, chainName}: {vaultChainName?: string, chainName?: string}): string {
+	if (vaultChainName && chainName) {
+		return `Please note, this Vault is on ${vaultChainName}. You're currently connected to ${chainName}.`;
+	}
+
+	if (vaultChainName && !chainName) {
+		return `Please note, this Vault is on ${vaultChainName} and you're currently connected to a different network.`;
+	}
+
+	if (!vaultChainName && chainName) {
+		return `Please note, you're currently connected to ${chainName} and this Vault is on a different network.`;
+	}
+
+	return 'Please note, you\'re currently connected to a different network than this Vault.';
 }
 
 export default Vault;

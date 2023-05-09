@@ -5,13 +5,16 @@ import	{motion}				from	'framer-motion';
 import	useYearn				from	'contexts/useYearn';
 import	Filters					from	'components/Filters';
 import {Card} 					from 	'components/common/Card';
-import {formatAmount} 			from 	'@yearn-finance/web-lib/utils/format.number';
+import {useChainID}				from	'@yearn-finance/web-lib/hooks/useChainID';
 import {Button} 				from 	'@yearn-finance/web-lib/components/Button';
+import {formatAmount} 			from 	'@yearn-finance/web-lib/utils/format.number';
 import performBatchedUpdates 	from 	'@yearn-finance/web-lib/utils/performBatchedUpdates';
 
 import type {TVault}			from	'contexts/useYearn.d';
 
 function	VaultCard({currentVault}: {currentVault: TVault}): ReactElement {
+	const	{safeChainID} = useChainID();
+	
 	const slashMotion = {
 		rest: {x: -8, y: -8},
 		hover: {x: -4, y: -4}
@@ -19,7 +22,7 @@ function	VaultCard({currentVault}: {currentVault: TVault}): ReactElement {
 
 	return (
 		<div className={'w-full'}>
-			<Link href={`/vault/${currentVault.address}`} passHref>
+			<Link href={`/${safeChainID}/vault/${currentVault.address}`} passHref>
 				<a>
 					<Card className={'yearn--card col-span-1 md:col-span-3'} padding={'none'}>
 						<motion.div initial={'rest'} whileHover={'hover'} animate={'rest'} className={'cursor-pointer'}>

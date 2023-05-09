@@ -6,6 +6,7 @@ import	{useRouter}													from	'next/router';
 import	{AnimatePresence, motion}									from	'framer-motion';
 import	{KBarProvider, Action, createAction, useRegisterActions}	from	'kbar';
 import {useWeb3} 													from 	'@yearn-finance/web-lib/contexts/useWeb3';
+import {useChainID} 												from	'@yearn-finance/web-lib/hooks/useChainID';
 import NetworkEthereum 												from 	'@yearn-finance/web-lib/icons/IconNetworkEthereum';
 import NetworkFantom 												from 	'@yearn-finance/web-lib/icons/IconNetworkFantom';
 import SocialGithub 												from 	'@yearn-finance/web-lib/icons/IconSocialGithub';
@@ -140,6 +141,7 @@ function	KBarWrapper(): React.ReactElement {
 	const	[actions, set_actions] = React.useState<Action[]>([]);
 	const	{vaults} = useYearn();
 	const	router = useRouter();
+	const	{safeChainID} = useChainID();
 
 	React.useEffect((): void => {
 		const	_actions = [];
@@ -148,7 +150,7 @@ function	KBarWrapper(): React.ReactElement {
 				name: vault.display_name || vault.name,
 				keywords: `${vault.display_name || vault.name} ${vault.symbol} ${vault.address}`,
 				section: 'Vaults',
-				perform: async (): Promise<boolean> => router.push(`/vault/${vault.address}`),
+				perform: async (): Promise<boolean> => router.push(`/${safeChainID}/vault/${vault.address}`),
 				icon: <Image src={vault.token.icon} alt={vault.display_name || vault.name} width={36} height={36} />,
 				subtitle: `${vault.address} - ${vault.token.symbol}`
 			}));
