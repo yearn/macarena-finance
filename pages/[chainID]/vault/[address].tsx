@@ -20,7 +20,7 @@ import type {TVault}						from	'contexts/useYearn.d';
 function	Vault(): ReactElement {
 	const	router = useRouter();
 	const	{vaults} = useYearn();
-	const	{chainID} = useWeb3();
+	const	{chainID, isActive} = useWeb3();
 	const 	{safeChainID} = useChainID();
 	const	[currentVault, set_currentVault] = React.useState<TVault | undefined>(vaults.find((vault): boolean => toAddress(vault.address) === router.query.address));
 	const {toast, toastMaster} = yToast();
@@ -36,7 +36,7 @@ function	Vault(): ReactElement {
 			return;
 		}
 
-		if (!!safeChainID && currentVault && Number(currentVault?.chainID) !== safeChainID) {
+		if (isActive && !!safeChainID && currentVault && Number(currentVault?.chainID) !== safeChainID) {
 			const vaultChainName = CHAINS[currentVault.chainID]?.name;
 			const chainName = CHAINS[safeChainID]?.name;
 
@@ -48,7 +48,7 @@ function	Vault(): ReactElement {
 
 			set_toastState({id: toastId, isOpen: true});
 		}
-	}, [currentVault, safeChainID, toast, toastMaster, toastState.id, toastState.isOpen]);
+	}, [currentVault, isActive, safeChainID, toast, toastMaster, toastState.id, toastState.isOpen]);
 
 	React.useEffect((): void => {
 		if (router.query.address) {
