@@ -375,6 +375,8 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 	** Render for the buttons part for code splitting and readability
 	**************************************************************************/
 	function	renderButtons(): ReactNode {
+		const decimals = currentVault?.token?.decimals || 18;
+
 		if (actionType === 'withdraw') {
 			return (
 				<div className={'mt-4 grid grid-cols-1 gap-2 px-4 pb-4 md:px-6 md:pb-6'}>
@@ -386,13 +388,14 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 						isDisabled={
 							!isActive
 							|| amount === '' || Number(amount) === 0 
-							|| Number(amount) > Number(formatUnits(shareOfVault || 0, 18))
+							|| Number(amount) > Number(formatUnits(shareOfVault || 0, decimals))
 						}>
 						{txStatusWithdraw.error ? 'Failed' : txStatusWithdraw.success ? 'Withdrawn!' : 'Withdraw'}
 					</Button>
 				</div>
 			);
 		}
+
 		return (
 			<div className={'mt-4 grid grid-cols-2 gap-2 px-4 pb-4 md:px-6 md:pb-6'}>
 				<Button
@@ -403,8 +406,8 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 					isDisabled={
 						!isActive
 						|| amount === '' || Number(amount) === 0 
-						|| Number(amount) > Number(formatUnits(balanceOfToken || 0, 18))
-						|| Number(amount) <= Number(formatUnits(allowanceForToken || 0, currentVault?.token?.decimals || 18))
+						|| Number(amount) > Number(formatUnits(balanceOfToken || 0, decimals))
+						|| Number(amount) <= Number(formatUnits(allowanceForToken || 0, decimals))
 					}>
 					{txStatusApprove.error ? 'Failed' : txStatusApprove.success ? 'Approved!' : 'Approve'}
 				</Button>
@@ -416,8 +419,8 @@ function DepositCard({currentVault}: {currentVault: TVault}): ReactElement{
 					isDisabled={
 						!isActive
 						|| amount === '' || Number(amount) === 0 
-						|| Number(amount) > Number(formatUnits(balanceOfToken || 0, 18))
-						|| Number(amount) > Number(formatUnits(allowanceForToken || 0, currentVault?.token?.decimals || 18))
+						|| Number(amount) > Number(formatUnits(balanceOfToken || 0, decimals))
+						|| Number(amount) > Number(formatUnits(allowanceForToken || 0, decimals))
 					}>
 					{txStatusDeposit.error ? 'Failed' : txStatusDeposit.success ? 'Deposited!' : 'Deposit'}
 				</Button>
