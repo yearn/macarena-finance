@@ -1,50 +1,63 @@
-import	React, {ReactElement, useContext, createContext}	from	'react';
-import	axios												from	'axios';
-import	NProgress											from	'nprogress';
-import {useRouter}											from	'next/router';
-import performBatchedUpdates 								from 	'@yearn-finance/web-lib/utils/performBatchedUpdates';
-import {useSettings} 										from 	'@yearn-finance/web-lib/contexts/useSettings';
-import {toAddress} 											from 	'@yearn-finance/web-lib/utils/address';
-import {useWeb3} 											from 	'@yearn-finance/web-lib/contexts/useWeb3';
-import {WalletContextApp}									from	'contexts/useWallet';
+import React, {ReactElement, useContext, createContext} from 'react';
+import axios from 'axios';
+import NProgress from 'nprogress';
+import {useRouter} from 'next/router';
+import performBatchedUpdates from '@yearn-finance/web-lib/utils/performBatchedUpdates';
+import {useSettings} from '@yearn-finance/web-lib/contexts/useSettings';
+import {toAddress} from '@yearn-finance/web-lib/utils/address';
+import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
+import {WalletContextApp} from 'contexts/useWallet';
+import {DAI, USDC, USDT, YFI, ETH, BTC, yvWFTM, yvUSDC, yvDAI, yvUSDT, yvWETH, yvWBTC, yvYFI} from 'components/common/constants';
 
-import type {TToken, TVault, TVaultAPI}						from	'contexts/useYearn.d';
+import type {TToken, TVault, TVaultAPI} from 'contexts/useYearn.d';
 
-type	TYearnContext = {
+type TYearnContext = {
 	vaults: TVault[],
 	nonce: number,
 	defaultCategories: string[]
 }
-const	YearnContext = createContext<TYearnContext>({
+
+enum Categories {
+	SimpleSaver = 'Simple Saver',
+	USDStable = 'USD Stable',
+	BlueChip = 'Blue Chip'
+}
+
+const YearnContext = createContext<TYearnContext>({
 	vaults: [],
 	nonce: 0,
-	defaultCategories: ['Simple Saver', 'USD Stable', 'Blue Chip']
+	defaultCategories: [Categories.SimpleSaver, Categories.USDStable, Categories.BlueChip]
 });
-export const YearnContextApp = ({children}: {children: ReactElement}): ReactElement => {
-	const	web3 = useWeb3();
-	const	{networks} = useSettings();
-	const	[vaults, set_vaults] = React.useState<TVault[]>([]);
-	const	[nonce, set_nonce] = React.useState(0);
-	const	[defaultCategories, set_defaultCategories] = React.useState<string[]>([]);
-	const 	router = useRouter();
-	const 	{chainID} = router.query;
+
+export const YearnContextApp = ({children}: { children: ReactElement }): ReactElement => {
+	const web3 = useWeb3();
+	const {networks} = useSettings();
+	const [vaults, set_vaults] = React.useState<TVault[]>([]);
+	const [nonce, set_nonce] = React.useState(0);
+	const [defaultCategories, set_defaultCategories] = React.useState<string[]>([]);
+	const router = useRouter();
+	const {chainID} = router.query;
 
 	const getYearnVaults = React.useCallback(async (): Promise<void> => {
 		NProgress.start();
-		
-		const parsedChainID = (chainID ? (Number(chainID) === 1337 ? 1 : Number(chainID)) : web3.chainID) || 1;
 
-		const	networkData = networks[parsedChainID];
-		const	[api, meta, tok, vs] = await Promise.allSettled([
+		if (typeof chainID !== 'undefined' && typeof chainID !== 'string') {
+			return;
+		}
+
+		const parsedChainID = (chainID ? (chainID === '1337' ? '1' : chainID) : String(web3.chainID)) || '1';
+
+		const networkData = networks[Number(parsedChainID)];
+
+		const [api, meta, tok, vs] = await Promise.allSettled([
 			axios.get(`${networkData.apiURI}/vaults/all`),
 			axios.get(`${networkData.metaURI}/strategies/all`),
 			axios.get(`${networkData.metaURI}/tokens/all`),
 			axios.get(`${networkData.metaURI}/vaults/all`)
 		]);
 
-		let	strategies = [];
-		let tokens = [];
-		let vaults = [];
+		let strategies = [], tokens = [], vaults = [];
+
 		if (api.status === 'rejected') {
 			console.error(`failed to fetch vaults: ${api.reason}`);
 			return;
@@ -64,7 +77,6 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 		if (vs.status === 'rejected') {
 			console.error(`failed to fetch tok: ${vs.reason}`);
 		} else {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			vs.value.data;
 		}
 
@@ -73,25 +85,11 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 		** You can use this filter function to add some conditions for the
 		** vaults to work with.
 		**********************************************************************/
-		const	endorsedVaults: {[key: number]: string[]} = {
-			1: [
-				toAddress('0xdA816459F1AB5631232FE5e97a05BBBb94970c95'), //yvDAI
-				toAddress('0xa354F35829Ae975e850e23e9615b11Da1B3dC4DE'), //yvUSDC
-				toAddress('0x7Da96a3891Add058AdA2E826306D812C638D87a7'), //yvUSDT
-				toAddress('0xdb25cA703181E7484a155DD612b06f57E12Be5F0'), //yvYFI
-				toAddress('0xa258C4606Ca8206D8aA700cE2143D7db854D168c'), //yvETH
-				toAddress('0xA696a63cc78DfFa1a63E9E50587C197387FF6C7E')  //yvBTC
-			],
-			250 : [
-				toAddress('0x0DEC85e74A92c52b7F708c4B10207D9560CEFaf0'), // yvWFTM
-				toAddress('0xEF0210eB96c7EB36AF8ed1c20306462764935607'), // yvUSDC
-				toAddress('0x637eC617c86D24E421328e6CAEa1d92114892439'), // yvDAI
-				toAddress('0x148c05caf1Bb09B5670f00D511718f733C54bC4c'), // yvUSDT
-				toAddress('0xCe2Fc0bDc18BD6a4d9A725791A3DEe33F3a23BB7'), // yvWETH
-				toAddress('0xd817A100AB8A29fE3DBd925c2EB489D67F758DA9'), // yvWBTC
-				toAddress('0x2C850cceD00ce2b14AA9D658b7Cad5dF659493Db')  // yvYFI
-			]
+		const endorsedVaults: { [key: number]: string[] } = {
+			1: [DAI, USDC, USDT, YFI, ETH, BTC],
+			250: [yvWFTM, yvUSDC, yvDAI, yvUSDT, yvWETH, yvWBTC, yvYFI]
 		};
+
 		vaults = vaults.filter((vault: TVaultAPI): boolean => {
 			/* 🔵 - Yearn Finance **********************************************
 			** If a migration is available, this means it's not the latest
@@ -106,7 +104,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 			** to endorse. If the vault's address match one of them, include it
 			** in the final list.
 			******************************************************************/
-			if (endorsedVaults[parsedChainID].includes(toAddress(vault.address))) {
+			if (endorsedVaults[Number(parsedChainID)].includes(toAddress(vault.address))) {
 				return true;
 			}
 			return false;
@@ -117,7 +115,7 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 		** filtered the elements we needed. Now we can try to group the data
 		** together to have some correct complet data to work with.
 		**********************************************************************/
-		const	_vaults: TVault[] = [];
+		const _vaults: TVault[] = [];
 		for (const vault of vaults) {
 			/* 🔵 - Yearn Finance **********************************************
 			** First, let's try to find the description for the underlying
@@ -133,9 +131,9 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 			** each vault, but without display name or description. Fix it by
 			** grouping data with meta.yearn.finance.
 			******************************************************************/
-			const	_strategies = [];
+			const _strategies = [];
 			for (const strat of vault.strategies) {
-				const	stratMeta = strategies.find((s: any): boolean => s.addresses.includes(strat.address));
+				const stratMeta = strategies.find((s: any): boolean => s.addresses.includes(strat.address));
 				if (stratMeta) {
 					_strategies.push({
 						display_name: stratMeta.name,
@@ -174,44 +172,48 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 			if (vault.token.symbol === 'cDAI+cUSDC+USDT')
 				vault.token.symbol = 'cUSDT';
 
-			vault.categories = ['Simple Saver'];
-			vault.chainID = chainID;
-			if (Number(chainID) === 1 || Number(chainID) === 1337) {
-				if (toAddress(vault.address) === toAddress('0xdA816459F1AB5631232FE5e97a05BBBb94970c95')) //DAI
-					vault.categories = ['Simple Saver', 'USD Stable'];
-				if (toAddress(vault.address) === toAddress('0xa354F35829Ae975e850e23e9615b11Da1B3dC4DE')) //usdc
-					vault.categories = ['Simple Saver', 'USD Stable'];
-				if (toAddress(vault.address) === toAddress('0x7Da96a3891Add058AdA2E826306D812C638D87a7')) //usdt
-					vault.categories = ['Simple Saver', 'USD Stable'];
-				if (toAddress(vault.address) === toAddress('0xdb25cA703181E7484a155DD612b06f57E12Be5F0')) //YFI
-					vault.categories = ['Simple Saver', 'Blue Chip'];
-				if (toAddress(vault.address) === toAddress('0xa258C4606Ca8206D8aA700cE2143D7db854D168c')) //ETH
-					vault.categories = ['Simple Saver', 'Blue Chip'];
-				if (toAddress(vault.address) === toAddress('0xA696a63cc78DfFa1a63E9E50587C197387FF6C7E')) //BTC
-					vault.categories = ['Simple Saver', 'Blue Chip'];
-			} else if (Number(chainID) === 250) {
-				if (toAddress(vault.address) === toAddress('0x0DEC85e74A92c52b7F708c4B10207D9560CEFaf0')) //yvWFTM
-					vault.categories = ['Simple Saver', 'Blue Chip'];
-				if (toAddress(vault.address) === toAddress('0xEF0210eB96c7EB36AF8ed1c20306462764935607')) //yvUSDC
-					vault.categories = ['Simple Saver', 'USD Stable'];
-				if (toAddress(vault.address) === toAddress('0x637eC617c86D24E421328e6CAEa1d92114892439')) //yvDAI
-					vault.categories = ['Simple Saver', 'USD Stable'];
-				if (toAddress(vault.address) === toAddress('0x148c05caf1Bb09B5670f00D511718f733C54bC4c')) //yvUSDT
-					vault.categories = ['Simple Saver', 'USD Stable'];
-				if (toAddress(vault.address) === toAddress('0xCe2Fc0bDc18BD6a4d9A725791A3DEe33F3a23BB7')) //yvWETH
-					vault.categories = ['Simple Saver', 'Blue Chip'];
-				if (toAddress(vault.address) === toAddress('0xd817A100AB8A29fE3DBd925c2EB489D67F758DA9')) //yvWBTC
-					vault.categories = ['Simple Saver', 'Blue Chip'];
-				if (toAddress(vault.address) === toAddress('0x2C850cceD00ce2b14AA9D658b7Cad5dF659493Db')) //yvYFI
-					vault.categories = ['Simple Saver', 'Blue Chip'];
+			vault.categories = [Categories.SimpleSaver];
+			vault.chainID = parsedChainID;
+
+			const vaultCategoryMap = {
+				'1_1337': {
+					[DAI]: [Categories.USDStable],
+					[USDC]: [Categories.USDStable],
+					[USDT]: [Categories.USDStable],
+					[YFI]: [Categories.BlueChip],
+					[ETH]: [Categories.BlueChip],
+					[BTC]: [Categories.BlueChip]
+				},
+				'250': {
+					[yvUSDC]: [Categories.USDStable],
+					[yvDAI]: [Categories.USDStable],
+					[yvUSDT]: [Categories.USDStable],
+					[yvWFTM]: [Categories.BlueChip],
+					[yvWETH]: [Categories.BlueChip],
+					[yvWBTC]: [Categories.BlueChip],
+					[yvYFI]: [Categories.BlueChip]
+				}
+			};
+
+			const chainKey = ['1', '1337'].includes(parsedChainID) ? '1_1337' : parsedChainID;
+
+			if (!isValidChain(chainKey)) {
+				return;
 			}
+
+			const addressCategories = vaultCategoryMap[chainKey][toAddress(vault.address)];
+
+			if (addressCategories) {
+				vault.categories = [...vault.categories, ...addressCategories];
+			}
+
 			_vaults.push(vault);
 		}
 
 		performBatchedUpdates((): void => {
 			set_vaults(_vaults);
 			set_nonce((n): number => n + 1);
-			set_defaultCategories([...new Set(_vaults.map((vault): string[] => vault.categories).flat())]);
+			set_defaultCategories([...new Set(_vaults.map(({categories}): string[] => categories).flat())]);
 			NProgress.done();
 		});
 	}, [chainID, networks, web3.chainID]);
@@ -229,6 +231,12 @@ export const YearnContextApp = ({children}: {children: ReactElement}): ReactElem
 	);
 };
 
+function isValidChain(chainID?: string | string[]): chainID is '1_1337' | '250' {
+	if (typeof chainID !== 'string') {
+		return false;
+	}
+	return ['1_1337', '250'].includes(chainID);
+}
 
 export const useYearn = (): TYearnContext => useContext(YearnContext);
 export default useYearn;

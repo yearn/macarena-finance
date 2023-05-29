@@ -4,7 +4,7 @@
   "private": false,
   "homepage": "./",
   "scripts": {
-    "dev": "next",
+    "dev": "NODE_OPTIONS='--inspect' next",
     "dev:ts": "tsc --watch",
     "start": "tsc && next build && next start",
     "build": "tsc && next build",

@@ -1,11 +1,12 @@
-import	React, {ReactElement, ReactNode}	from	'react';
+import React, {ReactElement, ReactNode} from 'react';
 
-type		TFilters = {
+type TFilters = {
 	availableCategories: string[],
 	currentCategory: string,
 	onSelect: (s: string) => void
 }
-function	Filters({availableCategories, currentCategory, onSelect}: TFilters): ReactElement {
+
+function Filters({availableCategories, currentCategory, onSelect}: TFilters): ReactElement {
 	return (
 		<div aria-label={'filters'} className={'mb-7 -ml-1 flex flex-row items-center justify-center space-x-2 md:ml-0'}>
 			{availableCategories.map((category: string): ReactNode => (

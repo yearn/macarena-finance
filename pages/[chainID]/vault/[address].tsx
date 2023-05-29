@@ -1,33 +1,32 @@
-import	React, {ReactElement}	from	'react';
-import	Link								from	'next/link';
-import	{useRouter}							from	'next/router';
-import {yToast} 							from	'@yearn-finance/web-lib/components/yToast';
-import {useChainID} 						from	'@yearn-finance/web-lib/hooks/useChainID';
-import Chevron 								from 	'@yearn-finance/web-lib/icons/IconChevron';
-import {parseMarkdown} 						from 	'@yearn-finance/web-lib/utils/helpers';
-import CHAINS								from	'@yearn-finance/web-lib/utils/web3/chains';
-import	useYearn							from	'contexts/useYearn';
-import	DepositCard							from	'components/vault/DepositCard';
-import	OverviewCard						from	'components/vault/OverviewCard';
-import	ChartCard							from	'components/vault/ChartCard';
-import useWeb3 								from	'@yearn-finance/web-lib/contexts/useWeb3';
-import {toAddress} 							from	'@yearn-finance/web-lib/utils/address';
-import {AddressWithActions} 				from 	'components/common/AddressWithActions';
-import {Card}								from 	'components/common/Card';
+import React, {ReactElement, useEffect, useState} from 'react';
+import Link from 'next/link';
+import {useRouter} from 'next/router';
+import {yToast} from '@yearn-finance/web-lib/components/yToast';
+import {useChainID} from '@yearn-finance/web-lib/hooks/useChainID';
+import Chevron from '@yearn-finance/web-lib/icons/IconChevron';
+import {parseMarkdown} from '@yearn-finance/web-lib/utils/helpers';
+import CHAINS from '@yearn-finance/web-lib/utils/web3/chains';
+import useYearn from 'contexts/useYearn';
+import DepositCard from 'components/vault/DepositCard';
+import OverviewCard from 'components/vault/OverviewCard';
+import ChartCard from 'components/vault/ChartCard';
+import useWeb3 from '@yearn-finance/web-lib/contexts/useWeb3';
+import {toAddress} from '@yearn-finance/web-lib/utils/address';
+import {AddressWithActions} from 'components/common/AddressWithActions';
+import {Card} from 'components/common/Card';
 
-import type {TVault}						from	'contexts/useYearn.d';
-
-function	Vault(): ReactElement {
-	const	router = useRouter();
-	const	{vaults} = useYearn();
-	const	{chainID, isActive} = useWeb3();
-	const 	{safeChainID} = useChainID();
-	const	[currentVault, set_currentVault] = React.useState<TVault | undefined>(vaults.find((vault): boolean => toAddress(vault.address) === router.query.address));
+function Vault(): ReactElement {
+	const router = useRouter();
+	const {vaults} = useYearn();
+	const {chainID, isActive} = useWeb3();
+	const {safeChainID} = useChainID();
+	const vault = vaults.find((vault): boolean => toAddress(vault.address) === router.query.address);
+	const [currentVault, set_currentVault] = useState(vault);
 	const {toast, toastMaster} = yToast();
-	
-	const [toastState, set_toastState] = React.useState<{id?: string; isOpen: boolean}>({isOpen: false});
 
-	React.useEffect((): void => {
+	const [toastState, set_toastState] = useState<{ id?: string; isOpen: boolean }>({isOpen: false});
+
+	useEffect((): void => {
 		if (toastState.isOpen) {
 			if (!!safeChainID && Number(currentVault?.chainID) === safeChainID) {
 				toastMaster.dismiss(toastState.id);
@@ -50,9 +49,9 @@ function	Vault(): ReactElement {
 		}
 	}, [currentVault, isActive, safeChainID, toast, toastMaster, toastState.id, toastState.isOpen]);
 
-	React.useEffect((): void => {
+	useEffect((): void => {
 		if (router.query.address) {
-			const	_currentVault = vaults.find((vault): boolean => toAddress(vault.address) === toAddress(router.query.address as string));
+			const _currentVault = vaults.find((vault): boolean => toAddress(vault.address) === toAddress(router.query.address as string));
 			set_currentVault(_currentVault);
 		}
 	}, [vaults, router.query.address]);
@@ -94,9 +93,9 @@ function	Vault(): ReactElement {
 											address={strategy.address}
 											className={'text-sm font-normal'} />
 										<p
-											className={'line-clamp-4 mt-4 text-xs'}
+											className={'mt-4 text-xs line-clamp-4'}
 											dangerouslySetInnerHTML={{__html: parseMarkdown((strategy?.description || '').replace(/{{token}}/g, currentVault.token.symbol) || '')}} />
-									
+
 									</div>
 								))}
 							</section>
@@ -113,7 +112,7 @@ function	Vault(): ReactElement {
 	);
 }
 
-export function getToastMessage({vaultChainName, chainName}: {vaultChainName?: string, chainName?: string}): string {
+export function getToastMessage({vaultChainName, chainName}: { vaultChainName?: string, chainName?: string }): string {
 	if (vaultChainName && chainName) {
 		return `Please note, this Vault is on ${vaultChainName}. You're currently connected to ${chainName}.`;
 	}
