@@ -7,7 +7,7 @@ import {useSettings} from '@yearn-finance/web-lib/contexts/useSettings';
 import {toAddress} from '@yearn-finance/web-lib/utils/address';
 import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
 import {WalletContextApp} from 'contexts/useWallet';
-import {DAI, USDC, USDT, YFI, ETH, BTC, yvWFTM, yvUSDC, yvDAI, yvUSDT, yvWETH, yvWBTC, yvYFI} from 'components/common/constants';
+import {ETH_YVDAI, ETH_YVUSDC, ETH_YVUSDT, ETH_YVYFI, ETH_YVETH, ETH_YVBTC, FTM_YVWFTM, FTM_YVUSDC, FTM_YVDAI, FTM_YVUSDT, FTM_YVWETH, FTM_YVWBTC, FTM_YVYFI} from 'components/common/constants';
 
 import type {TToken, TVault, TVaultAPI} from 'contexts/useYearn.d';
 
@@ -86,8 +86,8 @@ export const YearnContextApp = ({children}: { children: ReactElement }): ReactEl
 		** vaults to work with.
 		**********************************************************************/
 		const endorsedVaults: { [key: number]: string[] } = {
-			1: [DAI, USDC, USDT, YFI, ETH, BTC],
-			250: [yvWFTM, yvUSDC, yvDAI, yvUSDT, yvWETH, yvWBTC, yvYFI]
+			1: [ETH_YVDAI, ETH_YVUSDC, ETH_YVUSDT, ETH_YVYFI, ETH_YVETH, ETH_YVBTC],
+			250: [FTM_YVWFTM, FTM_YVUSDC, FTM_YVDAI, FTM_YVUSDT, FTM_YVWETH, FTM_YVWBTC, FTM_YVYFI]
 		};
 
 		vaults = vaults.filter((vault: TVaultAPI): boolean => {
@@ -177,21 +177,21 @@ export const YearnContextApp = ({children}: { children: ReactElement }): ReactEl
 
 			const vaultCategoryMap = {
 				'1_1337': {
-					[DAI]: [Categories.USDStable],
-					[USDC]: [Categories.USDStable],
-					[USDT]: [Categories.USDStable],
-					[YFI]: [Categories.BlueChip],
-					[ETH]: [Categories.BlueChip],
-					[BTC]: [Categories.BlueChip]
+					[ETH_YVDAI]: [Categories.USDStable],
+					[ETH_YVUSDC]: [Categories.USDStable],
+					[ETH_YVUSDT]: [Categories.USDStable],
+					[ETH_YVYFI]: [Categories.BlueChip],
+					[ETH_YVETH]: [Categories.BlueChip],
+					[ETH_YVBTC]: [Categories.BlueChip]
 				},
 				'250': {
-					[yvUSDC]: [Categories.USDStable],
-					[yvDAI]: [Categories.USDStable],
-					[yvUSDT]: [Categories.USDStable],
-					[yvWFTM]: [Categories.BlueChip],
-					[yvWETH]: [Categories.BlueChip],
-					[yvWBTC]: [Categories.BlueChip],
-					[yvYFI]: [Categories.BlueChip]
+					[FTM_YVUSDC]: [Categories.USDStable],
+					[FTM_YVDAI]: [Categories.USDStable],
+					[FTM_YVUSDT]: [Categories.USDStable],
+					[FTM_YVWFTM]: [Categories.BlueChip],
+					[FTM_YVWETH]: [Categories.BlueChip],
+					[FTM_YVWBTC]: [Categories.BlueChip],
+					[FTM_YVYFI]: [Categories.BlueChip]
 				}
 			};
 
