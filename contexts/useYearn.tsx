@@ -201,7 +201,11 @@ export const YearnContextApp = ({children}: { children: ReactElement }): ReactEl
 				return;
 			}
 
-			const addressCategories = vaultCategoryMap[chainKey][toAddress(vault.address)];
+			const chainVaults = vaultCategoryMap[chainKey];
+
+			const vaultAddress = toAddress(vault.address) as keyof typeof chainVaults;
+
+			const addressCategories = chainVaults[vaultAddress];
 
 			if (addressCategories) {
 				vault.categories = [...vault.categories, ...addressCategories];
