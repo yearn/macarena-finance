@@ -14,10 +14,6 @@ Running your own instance of Yearn makes you eligible to earn fees on top of all
 - [Folder Structure](#folder-structure)
 - [Other Docs](#other-docs)
 
-## Live Demo
-
-- https://macarena.finance/
-
 ## Quickstart
 
 1. Clone the repository: `git clone https://github.com/yearn/macarena-finance.git`
